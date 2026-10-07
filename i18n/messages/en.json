@@ -1,0 +1,64 @@
+{
+  "nav": {
+    "features": "Features",
+    "templates": "Templates",
+    "pricing": "Pricing",
+    "signin": "Sign In",
+    "signup": "Get Started"
+  },
+  "hero": {
+    "title": "Professional Websites for Real Estate & Construction",
+    "subtitle": "Create and manage stunning websites for your business. Choose a template, add your projects and content, and publish in minutes — no coding required.",
+    "cta": "Start Building — It's Free",
+    "ctaSecondary": "View Templates",
+    "noCreditCard": "No credit card required"
+  },
+  "features": {
+    "title": "Everything You Need to Build Your Online Presence",
+    "subtitle": "Powerful features designed specifically for real estate, construction, and design businesses.",
+    "templateBased": {
+      "title": "Template-Based",
+      "description": "Choose from professionally designed templates built specifically for real estate, construction, and design businesses."
+    },
+    "multiLanguage": {
+      "title": "Multi-Language",
+      "description": "Reach customers in both English and Arabic with full RTL/LTR support. Switch languages with one click."
+    },
+    "projectShowcase": {
+      "title": "Project Showcase",
+      "description": "Display your projects with beautiful galleries, detailed descriptions, and high-quality images."
+    },
+    "instantPublishing": {
+      "title": "Instant Publishing",
+      "description": "Publish your website with one click. Changes go live immediately with automatic CDN cache invalidation."
+    },
+    "mediaManagement": {
+      "title": "Media Management",
+      "description": "Upload and organize all your images and media. Optimized for fast loading and beautiful presentation."
+    },
+    "trackingAnalytics": {
+      "title": "Tracking & Analytics",
+      "description": "Add Meta Pixel, Google Analytics, and other tracking tools to understand your visitors and grow your business."
+    }
+  },
+  "templates": {
+    "title": "Professional Templates for Your Industry",
+    "subtitle": "Start with a template designed for your business type. Customize colors, fonts, and content to match your brand.",
+    "browseAll": "Browse All Templates"
+  },
+  "cta": {
+    "title": "Ready to Build Your Professional Website?",
+    "subtitle": "Join businesses using Gzora to create stunning websites. Start free, upgrade when you're ready.",
+    "getStarted": "Get Started Free",
+    "signin": "Sign In"
+  },
+  "footer": {
+    "description": "Professional websites for real estate, construction, contracting, interior design, and architecture businesses. Build your online presence in minutes.",
+    "product": "Product",
+    "company": "Company",
+    "about": "About",
+    "contact": "Contact",
+    "privacy": "Privacy",
+    "rights": "All rights reserved."
+  }
+}
