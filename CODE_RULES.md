@@ -1,318 +1,125 @@
 # Gzora — Code Rules
 
-## 1. Project Structure
+## 1. Structure: Feature-Based
 
-```
-gyzora/
-├── app/                    # Next.js App Router
-│   ├── (marketing)/        # Landing page, pricing, etc.
-│   ├── (dashboard)/        # Customer dashboard (auth required)
-│   ├── (owner)/            # Owner dashboard (owner role required)
-│   ├── [tenantSlug]/       # Public tenant websites
-│   ├── api/                # Route Handlers (API endpoints)
-│   ├── layout.tsx          # Root layout
-│   └── page.tsx            # Landing page
-├── components/             # Shared React components
-│   ├── ui/                 # Base UI components (Button, Input, etc.)
-│   ├── forms/              # Form components
-│   └── layout/             # Layout components (Header, Footer, etc.)
-├── lib/                    # Server-side utilities
-│   ├── auth/               # Better Auth config
-│   ├── db/                 # MongoDB connection
-│   ├── repositories/       # Data access layer
-│   ├── services/           # Business logic
-│   └── utils/              # Helper functions
-├── models/                 # Mongoose schemas
-├── templates/              # Website templates (TypeScript objects)
-├── themes/                 # Theme definitions
-├── i18n/                   # Internationalization
-│   ├── messages/           # Translation files
-│   └── config.ts           # i18n configuration
-├── docs/                   # Documentation
-│   ├── architecture/
-│   ├── decisions/
-│   ├── epics/
-│   └── reports/
-├── public/                 # Static assets
-├── next.config.ts
-├── tsconfig.json
-└── package.json
-```
+Everything about a feature lives in ONE folder. No global models/, services/, or repositories/ folders.
 
-## 2. Naming Conventions
+gzora/
+├── app/                      # Routing only (thin pages, layouts, thin route.ts files)
+│   ├── (marketing)/
+│   ├── (dashboard)/
+│   ├── (owner)/
+│   ├── s/[tenantSlug]/       # Public tenant sites
+│   └── api/
+├── features/
+│   └── projects/             # one folder per feature
+│       ├── components/       # UI (server + client)
+│       ├── handlers.ts       # API logic: auth + validation, then calls service
+│       ├── api-client.ts     # fetch wrapper used by client components
+│       ├── service.ts        # Business logic
+│       ├── repository.ts     # DB queries (only place that touches the model)
+│       ├── model.ts          # Mongoose schema + interface for THIS feature
+│       ├── schema.ts         # Zod validation
+│       └── types.ts
+├── shared/                   # Used by 2+ features only
+│   ├── ui/                   # Button, Input, Modal...
+│   ├── lib/                  # auth, db connection, s3, tenant, env
+│   └── i18n/
+├── templates/
+├── docs/
+└── public/
+
+Rules:
+- A feature never imports another feature's model.ts or repository.ts. It calls the other feature's service.ts.
+- Move code to shared/ only when a second feature needs it.
+- app/api/.../route.ts is only a thin re-export of the feature's handlers (e.g. `export { POST } from '@/features/projects/handlers'`). No logic inside it.
+- Each feature is a bundle: it can be understood, tested, or deleted on its own.
+
+## 2. Naming
 
 | Element | Convention | Example |
-|---------|-----------|---------|
-| Components | PascalCase | `ProjectCard.tsx` |
-| Files (non-component) | kebab-case | `auth-service.ts` |
-| API routes | kebab-case | `app/api/auth/login/route.ts` |
-| Mongoose models | PascalCase singular | `User`, `Tenant`, `Site` |
-| MongoDB collections | snake_case plural | `users`, `tenants`, `sites` |
-| CSS classes | Tailwind utilities | `flex items-center gap-2` |
-| Environment variables | SCREAMING_SNAKE | `MONGODB_URI` |
-| i18n keys | dot.notation | `dashboard.projects.title` |
+|---|---|---|
+| Components | PascalCase | ProjectCard.tsx |
+| Other files | kebab-case | project-service.ts |
+| Models | PascalCase singular | Project |
+| Collections | snake_case plural | projects |
+| Env vars | SCREAMING_SNAKE | MONGODB_URI |
+| i18n keys | dot.notation | projects.list.title |
 
-## 3. Server/Client Boundaries
+## 3. Server / Client Boundary
 
-### Server Components (default)
-- Data fetching from MongoDB
-- Authentication checks
-- Business logic
-- Database mutations via Server Actions
+- Server Components by default. `'use client'` only for interactivity, browser APIs, and pixels/analytics.
+- Client components never import repository, service, model, or anything using secrets.
+- All mutations and client-triggered requests go through API Routes (Route Handlers). No Server Actions.
+- Client components call the API only through the feature's api-client.ts.
+- Server Components may read data by calling the feature's service directly (no fetch to own API).
+- Always validate on the server, even if validated on the client.
 
-### Client Components (`'use client'`)
-- Interactive UI (forms, modals, dropdowns)
-- Browser APIs (localStorage, window)
-- Event handlers (onClick, onChange)
-- Third-party integrations (analytics, pixels)
+## 4. Flow Inside a Feature
 
-### Rules
-- **Never** import server-only code into client components
-- **Never** expose API keys to client components
-- **Always** validate data on server, even if validated on client
-- Server Actions for mutations, Route Handlers for external APIs
+UI → api-client → route.ts → handlers → service → repository → model
 
-## 4. Database Access
+- Handler: auth check + Zod validation, then calls service.
+- Service: business logic only.
+- Repository: queries only. Returns plain objects (.lean()), never Mongoose documents.
+- Pages/components never query the DB directly.
 
-### Mongoose Models
-- All models in `models/` directory
-- Models are singletons — use `models/` pattern to avoid recompilation
-- Always use TypeScript interfaces with models
+## 5. Multi-Tenancy
 
-### Repository Pattern
-- All database queries go through repositories in `lib/repositories/`
-- Components/pages never query MongoDB directly
-- Repositories return plain objects, not Mongoose documents
+- tenantId always comes from the session (getTenantContext()), never from client input.
+- Every tenant-scoped repository function takes tenantId as its first argument and filters by it.
+- Every tenant-scoped model has an index on tenantId (compound when needed, e.g. `{ tenantId: 1, slug: 1 }`).
+- OWNER cross-tenant access goes through explicit owner-named functions, never by skipping the filter.
 
-### Tenant Isolation
-- **EVERY** query MUST include `tenantId` filter
-- Repositories enforce tenant isolation automatically
-- Never trust client-provided tenantId — derive from session
+## 6. Auth
 
-```typescript
-// CORRECT: tenantId from session
-const session = await auth.api.getSession({ headers })
-const tenantId = session?.user.tenantId
-const projects = await projectRepository.findByTenant(tenantId)
+- Better Auth only. No custom auth logic.
+- Session has user.id, user.role, user.tenantId. Roles: CUSTOMER, OWNER.
+- Use shared helpers: requireSession() and requireRole('OWNER'). Don't re-write the check in each file.
+- For any resource by id: check it belongs to the session's tenant.
 
-// WRONG: tenantId from client input
-const { tenantId } = await req.json()
-const projects = await projectRepository.findByTenant(tenantId)
-```
+## 7. Validation & Errors
 
-## 5. Validation
+- Zod for all input, in each feature's schema.ts.
+- Handlers use safeParse and return errors as values: 400 validation, 401 no session, 403 no permission, 404 not found, 500 unexpected.
+- Every handler returns the same shape: `{ success: true; data: T } | { success: false; error: string }`.
 
-### Zod Schemas
-- All input validation with Zod
-- Schemas in `lib/validation/` or colocated with models
-- Validate on server for every mutation
+## 8. Media (S3)
 
-```typescript
-import { z } from 'zod'
+- Files go to S3. MongoDB stores only metadata `{ key, url, size, mimeType, tenantId }`.
+- Pre-signed uploads only. Key must start with `tenants/{tenantId}/`.
+- Check max size and allowed mime types before signing.
+- Use next/image.
 
-export const createProjectSchema = z.object({
-  title: z.string().min(1).max(200),
-  description: z.string().max(2000).optional(),
-  images: z.array(z.string().url()).max(20).optional(),
-})
-```
+## 9. TypeScript
 
-### Server Action Validation
-```typescript
-export async function createProject(formData: FormData) {
-  'use server'
-  const data = createProjectSchema.parse(Object.fromEntries(formData))
-  // ... proceed with validated data
-}
-```
+- strict: true. No any — use unknown and narrow.
+- Explicit return types on exported functions.
+- Each model file exports its interface next to its schema.
 
-## 6. Authentication & Authorization
+## 10. Env
 
-### Better Auth
-- All auth via Better Auth — no custom auth logic
-- Session contains: `user.id`, `user.role`, `user.tenantId`
-- Roles: `CUSTOMER`, `OWNER`
-
-### Authorization Rules
-- **CUSTOMER**: Can only access own tenant's data
-- **OWNER**: Can access all tenants, platform management
-- **Public**: Landing page, public tenant websites
-
-### Protecting Routes
-```typescript
-// In Server Components
-const session = await auth.api.getSession({ headers })
-if (!session) redirect('/auth/signin')
-
-// In Server Actions
-const session = await auth.api.getSession({ headers })
-if (!session) throw new Error('Unauthorized')
-
-// In Route Handlers
-const session = await auth.api.getSession({ headers })
-if (!session) return Response.json({ error: 'Unauthorized' }, { status: 401 })
-```
-
-## 7. Multi-Tenancy
-
-### Tenant Resolution
-- Public sites: `gzora.com/s/{tenantSlug}` — resolve by slug
-- Dashboard: tenant from session
-- API: tenant from session
-
-### Tenant Context
-```typescript
-// lib/tenant.ts
-export async function getTenantContext() {
-  const session = await auth.api.getSession({ headers })
-  if (!session?.user.tenantId) throw new Error('No tenant')
-  return {
-    tenantId: session.user.tenantId,
-    userId: session.user.id,
-    role: session.user.role,
-  }
-}
-```
-
-### Data Isolation
-- All tenant-scoped queries MUST filter by tenantId
-- Indexes on tenantId for all tenant-scoped collections
-- Compound indexes: `{ tenantId: 1, slug: 1 }` for tenant-scoped lookups
-
-## 8. Media & File Storage
-
-### S3 Storage
-- All media stored in S3, not MongoDB
-- MongoDB stores metadata: `{ key, url, size, mimeType, tenantId }`
-- Use pre-signed URLs for uploads
-
-### Image Optimization
-- Use `next/image` for optimization
-- S3 public base URL for source images
-- Implement `loader` in `next.config.ts` for S3
-
-### Media Repository
-```typescript
-// lib/repositories/media.ts
-export async function uploadMedia(file: File, tenantId: string) {
-  // 1. Generate unique key
-  // 2. Upload to S3
-  // 3. Save metadata to MongoDB
-  // 4. Return media object
-}
-```
-
-## 9. Error Handling
-
-### Server Actions
-```typescript
-// Return errors as values, not throws
-export async function createProject(prevState: any, formData: FormData) {
-  const result = createProjectSchema.safeParse(Object.fromEntries(formData))
-  if (!result.success) {
-    return { error: result.error.flatten().fieldErrors }
-  }
-  // ... proceed
-}
-```
-
-### Route Handlers
-```typescript
-export async function POST(request: Request) {
-  try {
-    // ... handle request
-    return Response.json({ data })
-  } catch (error) {
-    return Response.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
-```
-
-### Error Boundaries
-- `error.tsx` for route-level error handling
-- `global-error.tsx` for app-level errors
-- Log errors to console in development, to logging service in production
-
-## 10. TypeScript Conventions
-
-### Strict Mode
-- `strict: true` in tsconfig
-- No `any` — use `unknown` and narrow
-- Explicit return types on exported functions
-
-### Type Definitions
-```typescript
-// models/types.ts
-export interface IUser {
-  _id: Types.ObjectId
-  email: string
-  name: string
-  role: 'CUSTOMER' | 'OWNER'
-  tenantId?: Types.ObjectId
-  createdAt: Date
-  updatedAt: Date
-}
-```
-
-### API Response Types
-```typescript
-// lib/api.ts
-export type ApiResponse<T> =
-  | { success: true; data: T }
-  | { success: false; error: string; details?: unknown }
-```
+- Server-only: MONGODB_URI, BETTER_AUTH_SECRET, S3_*, POLAR_ACCESS_TOKEN.
+- Client-safe: NEXT_PUBLIC_* only.
+- Validate all env vars at startup (Zod).
+- Never commit .env. Keep .env.example updated.
 
 ## 11. Testing
 
-### Unit Tests
-- Vitest for unit tests
-- Test repositories, services, utilities
-- Mock MongoDB with `mongodb-memory-server`
+- Vitest for services/repositories (mongodb-memory-server).
+- Required test per tenant-scoped feature: one tenant can't read another's data.
+- Playwright for critical flows: signup → create site → publish → view.
 
-### Integration Tests
-- Test API endpoints with supertest
-- Test Server Actions directly
+## 12. Don't
 
-### E2E Tests
-- Playwright for critical user flows
-- Test: signup → create site → publish → view public site
-
-## 12. Prohibited Patterns
-
-| Don't | Do Instead |
-|-------|-----------|
-| Query MongoDB in components | Use repositories |
-| Trust client-provided tenantId | Derive from session |
-| Store secrets in client code | Use server environment variables |
-| Use `any` type | Use `unknown` and narrow |
-| Skip validation | Always validate with Zod |
-| Hardcode tenant logic | Use tenant context |
-| Use `next lint` | Use ESLint directly |
-| Use `middleware` | Use `proxy.ts` if needed |
-| Use Pages Router | Use App Router |
-| Use `getServerSideProps` | Use Server Components |
-
-## 13. Git Workflow
-
-- `main` branch — production-ready
-- Feature branches: `feature/epic-milestone-task`
-- Commit messages: `feat: add project creation flow`
-- PR requires: passing build, passing tests, code review
-
-## 14. Environment Variables
-
-### Server-only (never expose to client)
-- `MONGODB_URI`
-- `BETTER_AUTH_SECRET`
-- `S3_ACCESS_KEY_ID`
-- `S3_SECRET_ACCESS_KEY`
-- `POLAR_ACCESS_TOKEN`
-
-### Client-safe (prefix with `NEXT_PUBLIC_`)
-- `NEXT_PUBLIC_APP_URL`
-- `NEXT_PUBLIC_S3_PUBLIC_BASE_URL`
-
-### Rules
-- Never commit `.env` files
-- Use `.env.example` for documentation
-- Validate env vars at startup
+| Don't | Do instead |
+|---|---|
+| Global models/ folder | model.ts inside the feature |
+| Import another feature's model/repository | Call its service |
+| Query DB in components | Use the feature repository |
+| Trust client tenantId | Take it from session |
+| Server Actions | API Route + handlers.ts |
+| Logic inside route.ts | Put it in the feature's handlers.ts |
+| Skip validation | Zod in schema.ts |
+| Use any | unknown + narrowing |
+| Pages Router / getServerSideProps | App Router + Server Components |
