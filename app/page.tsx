@@ -1,9 +1,8 @@
-import { Header } from '@/components/layout/Header'
-import { Footer } from '@/components/layout/Footer'
-import { HeroSection } from '@/components/marketing/HeroSection'
-import { FeaturesSection } from '@/components/marketing/FeaturesSection'
-import { TemplatesSection } from '@/components/marketing/TemplatesSection'
-import { CTASection } from '@/components/marketing/CTASection'
+import { Header, Footer } from '@/shared/ui'
+import { HeroSection } from '@/app/(marketing)/components/HeroSection'
+import { FeaturesSection } from '@/app/(marketing)/components/FeaturesSection'
+import { TemplatesSection } from '@/app/(marketing)/components/TemplatesSection'
+import { CTASection } from '@/app/(marketing)/components/CTASection'
 
 export default function LandingPage() {
   return (

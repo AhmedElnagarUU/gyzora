@@ -1,4 +1,4 @@
-import SignOutButton from '@/components/auth/SignOutButton'
+import SignOutButton from '@/features/auth/components/SignOutButton'
 
 export default function OwnerPage() {
   return (

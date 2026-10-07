@@ -1,4 +1,4 @@
-import { auth } from '@/lib/auth'
+import { handleAuth } from '@/features/auth/handlers'
 
-export const GET = auth.handler
-export const POST = auth.handler
+export const GET = handleAuth
+export const POST = handleAuth

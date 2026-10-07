@@ -3,6 +3,9 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { signIn } from '@/features/auth/api-client'
+import { signInSchema } from '@/features/auth/schema'
+import { Button, Input } from '@/shared/ui'
 
 export default function SignInPage() {
   const router = useRouter()
@@ -16,24 +19,21 @@ export default function SignInPage() {
     setLoading(true)
     setError('')
 
+    const parse = signInSchema.safeParse({ email, password })
+    if (!parse.success) {
+      setError(parse.error.issues[0]?.message || 'Invalid input')
+      setLoading(false)
+      return
+    }
+
     try {
-      const res = await fetch('/api/auth/sign-in', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      })
-
-      const data = await res.json()
-
-      if (!res.ok) {
-        setError(data.error?.message || 'Failed to sign in')
-        return
-      }
-
+      await signIn(email, password)
       router.push('/dashboard')
       router.refresh()
-    } catch {
-      setError('An error occurred. Please try again.')
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : 'An error occurred. Please try again.'
+      )
     } finally {
       setLoading(false)
     }
@@ -55,22 +55,19 @@ export default function SignInPage() {
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-6">
           {error && (
-            <div className="rounded-lg bg-red-50 p-3 text-sm text-red-600">
-              {error}
-            </div>
+            <div className="rounded-lg bg-red-50 p-3 text-sm text-red-600">{error}</div>
           )}
 
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">
               Email address
             </label>
-            <input
+            <Input
               id="email"
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm placeholder-gray-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
               placeholder="you@example.com"
             />
           </div>
@@ -79,28 +76,23 @@ export default function SignInPage() {
             <label htmlFor="password" className="block text-sm font-medium text-gray-700">
               Password
             </label>
-            <input
+            <Input
               id="password"
               type="password"
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm placeholder-gray-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
               placeholder="••••••••"
             />
           </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
+          <Button type="submit" disabled={loading} className="w-full">
             {loading ? 'Signing in...' : 'Sign In'}
-          </button>
+          </Button>
         </form>
 
         <p className="mt-6 text-center text-sm text-gray-600">
-          Don&apos;t have an account?{' '}
+          Don&apos;t have an account?&nbsp;
           <Link href="/auth/signup" className="font-medium text-primary-600 hover:text-primary-500">
             Sign up
           </Link>

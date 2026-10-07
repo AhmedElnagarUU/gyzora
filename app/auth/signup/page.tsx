@@ -3,6 +3,9 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { signUp } from '@/features/auth/api-client'
+import { signUpSchema } from '@/features/auth/schema'
+import { Button, Input } from '@/shared/ui'
 
 export default function SignUpPage() {
   const router = useRouter()
@@ -17,24 +20,21 @@ export default function SignUpPage() {
     setLoading(true)
     setError('')
 
+    const parse = signUpSchema.safeParse({ name, email, password })
+    if (!parse.success) {
+      setError(parse.error.issues[0]?.message || 'Invalid input')
+      setLoading(false)
+      return
+    }
+
     try {
-      const res = await fetch('/api/auth/sign-up', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ email, password, name }),
-      })
-
-      const data = await res.json()
-
-      if (!res.ok) {
-        setError(data.error?.message || 'Failed to create account')
-        return
-      }
-
+      await signUp(email, password, name)
       router.push('/dashboard')
       router.refresh()
-    } catch {
-      setError('An error occurred. Please try again.')
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : 'An error occurred. Please try again.'
+      )
     } finally {
       setLoading(false)
     }
@@ -56,22 +56,19 @@ export default function SignUpPage() {
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-6">
           {error && (
-            <div className="rounded-lg bg-red-50 p-3 text-sm text-red-600">
-              {error}
-            </div>
+            <div className="rounded-lg bg-red-50 p-3 text-sm text-red-600">{error}</div>
           )}
 
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-gray-700">
               Full name
             </label>
-            <input
+            <Input
               id="name"
               type="text"
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm placeholder-gray-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
               placeholder="John Doe"
             />
           </div>
@@ -80,13 +77,12 @@ export default function SignUpPage() {
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">
               Email address
             </label>
-            <input
+            <Input
               id="email"
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm placeholder-gray-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
               placeholder="you@example.com"
             />
           </div>
@@ -95,30 +91,25 @@ export default function SignUpPage() {
             <label htmlFor="password" className="block text-sm font-medium text-gray-700">
               Password
             </label>
-            <input
+            <Input
               id="password"
               type="password"
               required
               minLength={8}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm placeholder-gray-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
               placeholder="••••••••"
             />
             <p className="mt-1 text-xs text-gray-500">Must be at least 8 characters</p>
           </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
+          <Button type="submit" disabled={loading} className="w-full">
             {loading ? 'Creating account...' : 'Create Account'}
-          </button>
+          </Button>
         </form>
 
         <p className="mt-6 text-center text-sm text-gray-600">
-          Already have an account?{' '}
+          Already have an account?&nbsp;
           <Link href="/auth/signin" className="font-medium text-primary-600 hover:text-primary-500">
             Sign in
           </Link>

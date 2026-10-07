@@ -1,4 +1,4 @@
-import { auth } from '@/lib/auth'
+import { auth } from '@/shared/lib/auth/auth-client'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
@@ -32,7 +32,7 @@ export async function middleware(request: NextRequest) {
     nextUrl.pathname.startsWith('/auth') &&
     isAuthenticated
   ) {
-    const role = (session.user as any).customFields?.role || 'CUSTOMER'
+    const role = (session.user as { role?: string }).role || 'CUSTOMER'
     const redirectTo = role === 'OWNER' ? '/owner' : '/dashboard'
     return NextResponse.redirect(new URL(redirectTo, request.url))
   }

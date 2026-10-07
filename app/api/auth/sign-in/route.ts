@@ -1,6 +1,6 @@
-import { auth } from '@/lib/auth'
-import { NextResponse } from 'next/server'
+import { handleAuth } from '@/features/auth/handlers'
+import type { NextRequest } from 'next/server'
 
-export async function POST(req: Request) {
-  return auth.handler(req)
+export async function POST(req: NextRequest) {
+  return handleAuth(req)
 }
