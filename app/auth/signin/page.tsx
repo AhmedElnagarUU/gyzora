@@ -2,8 +2,10 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 export default function SignInPage() {
+  const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -15,11 +17,21 @@ export default function SignInPage() {
     setError('')
 
     try {
-      // TODO: Integrate with Better Auth
-      // const result = await signIn.email, password)
-      // if (result.error) setError(result.error)
-      // else router.push('/dashboard')
-      setError('Authentication will be available in the next milestone.')
+      const res = await fetch('/api/auth/sign-in', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        setError(data.error?.message || 'Failed to sign in')
+        return
+      }
+
+      router.push('/dashboard')
+      router.refresh()
     } catch {
       setError('An error occurred. Please try again.')
     } finally {

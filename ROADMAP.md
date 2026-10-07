@@ -42,7 +42,7 @@ Security audit, performance optimization, monitoring, error tracking.
 - [x] 1.4 Create project structure (directories)
 - [x] 1.5 Build landing page layout (header, footer, hero)
 - [x] 1.6 Build landing page sections (features, templates preview, CTA)
-- [x] 1.7 Add i18n support (English + Arabic, RTL/LTR)
+- [~] 1.7 Add i18n support (English + Arabic, RTL/LTR) — config + messages created, component integration pending
 - [x] 1.8 Verify build passes
 
 ### M2: Authentication & Authorization
