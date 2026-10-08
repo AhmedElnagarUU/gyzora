@@ -67,9 +67,9 @@ Security audit, performance optimization, monitoring, error tracking.
 - [x] 3.3 Build site settings page
 - [x] 3.4 Build projects list page
 - [x] 3.5 Build project create/edit page
-- [~] 3.6 Build media library UI (list/upload/delete)
-- [~] 3.7 Implement S3 pre-signed upload + metadata storage
-- [~] 3.8 Enforce tenant-scoped S3 keys and file validation
+- [x] 3.6 Build media library UI (list/upload/delete)
+- [x] 3.7 Implement S3 pre-signed upload + metadata storage
+- [x] 3.8 Enforce tenant-scoped S3 keys and file validation
 - **Done when:** a customer can open the media library, upload an image file (validated by type/size), see it listed, and delete it — all scoped to their tenant.
 
 ### M4: Template & Theme System
@@ -134,6 +134,7 @@ Security audit, performance optimization, monitoring, error tracking.
 - [ ] 9.4 Logging and monitoring
 - [ ] 9.5 Load testing
 - [ ] 9.6 Deployment pipeline
+- **Done when:** the platform passes an OWASP security scan, serves pages with sub-100ms P95 latency, tracks errors in production, and deploys via a CI/CD pipeline.
 
 ---
 
