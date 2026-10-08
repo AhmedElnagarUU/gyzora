@@ -1,0 +1,1 @@
+export { GET, POST, PUT, DELETE } from '@/features/media/handlers'
