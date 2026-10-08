@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Multi-tenant SaaS website builder for real estate, construction, and design businesses",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --webpack --hostname 0.0.0.0 --port 3000",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
