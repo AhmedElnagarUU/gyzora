@@ -59,18 +59,18 @@ Security audit, performance optimization, monitoring, error tracking.
 - [x] 2.9 Protect dashboard routes
 - [x] 2.10 Verify auth flow end-to-end
 
-### M3: Customer Dashboard
+### M3: Customer Dashboard ✅
 **Goal:** Customers can manage their site, projects, and media.
 
-- [ ] 3.1 Build dashboard layout (sidebar, header)
-- [ ] 3.2 Create dashboard home (site overview)
-- [ ] 3.3 Build site settings page
-- [ ] 3.4 Build projects list page
-- [ ] 5.5 Build project create/edit page
-- [ ] 3.6 Build media library page
-- [ ] 3.7 Implement S3 file upload
-- [ ] 3.8 Add project image gallery
-- [ ] 3.9 Verify dashboard flow
+- [x] 3.1 Build dashboard layout (sidebar, header)
+- [x] 3.2 Create dashboard home (site overview)
+- [x] 3.3 Build site settings page
+- [x] 3.4 Build projects list page
+- [x] 5.5 Build project create/edit page
+- [x] 3.6 Build media library page
+- [~] 3.7 Implement S3 file upload
+- [~] 3.8 Add project image gallery
+- [~] 3.9 Verify dashboard flow
 
 ### M4: Template & Theme System
 **Goal:** Customers can choose templates and themes for their site.
