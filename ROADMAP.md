@@ -42,22 +42,22 @@ Security audit, performance optimization, monitoring, error tracking.
 - [x] 1.4 Create project structure (directories)
 - [x] 1.5 Build landing page layout (header, footer, hero)
 - [x] 1.6 Build landing page sections (features, templates preview, CTA)
-- [~] 1.7 Add i18n support (English + Arabic, RTL/LTR) — config + messages created, component integration pending
-- [x] 1.8 Verify build passes
+- [x] 1.7 Complete i18n support (English + Arabic, RTL/LTR) — config, messages, and layout integration
+- [x] 1.8 Done when: `npm run build` passes and the landing page renders locally.
 
 ### M2: Authentication & Authorization ✅
 **Goal:** Users can sign up, sign in, and are assigned roles. Tenant created on signup.
 
 - [x] 2.1 Install and configure Better Auth
 - [x] 2.2 Create MongoDB connection and Mongoose setup
-- [x] 2.3 Define User, Tenant, Site models
+- [x] 2.3 Define User, Tenant, Site models (each in its own feature folder)
 - [x] 2.4 Build sign up page
 - [x] 2.5 Build sign in page
 - [x] 2.6 Implement session management
 - [x] 2.7 Add role-based authorization (CUSTOMER, OWNER)
 - [x] 2.8 Create tenant on signup
 - [x] 2.9 Protect dashboard routes
-- [x] 2.10 Verify auth flow end-to-end
+- [x] 2.10 Done when: a new user can sign up (with tenant auto-created), sign in, access the dashboard, and sign out.
 
 ### M3: Customer Dashboard ✅
 **Goal:** Customers can manage their site, projects, and media.
@@ -66,11 +66,11 @@ Security audit, performance optimization, monitoring, error tracking.
 - [x] 3.2 Create dashboard home (site overview)
 - [x] 3.3 Build site settings page
 - [x] 3.4 Build projects list page
-- [x] 5.5 Build project create/edit page
-- [x] 3.6 Build media library page
-- [~] 3.7 Implement S3 file upload
-- [~] 3.8 Add project image gallery
-- [~] 3.9 Verify dashboard flow
+- [x] 3.5 Build project create/edit page
+- [~] 3.6 Build media library UI (list/upload/delete)
+- [~] 3.7 Implement S3 pre-signed upload + metadata storage
+- [~] 3.8 Enforce tenant-scoped S3 keys and file validation
+- **Done when:** a customer can open the media library, upload an image file (validated by type/size), see it listed, and delete it — all scoped to their tenant.
 
 ### M4: Template & Theme System
 **Goal:** Customers can choose templates and themes for their site.
@@ -82,7 +82,8 @@ Security audit, performance optimization, monitoring, error tracking.
 - [ ] 4.5 Build template selection page
 - [ ] 4.6 Build theme selection page
 - [ ] 4.7 Implement template rendering engine
-- [ ] 4.8 Verify template + theme rendering
+- [ ] 4.8 Define image slots per template; build picker from media library
+- **Done when:** a customer selects a template/theme and assigns images from their library to defined slots (logo, hero, gallery).
 
 ### M5: Content & Projects
 **Goal:** Full project content management with SEO.
@@ -91,7 +92,7 @@ Security audit, performance optimization, monitoring, error tracking.
 - [ ] 5.2 Add SEO metadata fields
 - [ ] 5.3 Implement project publishing status
 - [ ] 5.4 Add project ordering
-- [ ] 5.5 Verify content management
+- [ ] 5.5 Done when: a customer can create and edit project content with SEO fields, set ordering, and toggle publishing state.
 
 ### M6: Publishing & Public Sites
 **Goal:** Published sites are publicly accessible at `gzora.com/s/{tenantSlug}`.
@@ -100,8 +101,10 @@ Security audit, performance optimization, monitoring, error tracking.
 - [ ] 6.2 Build public site renderer
 - [ ] 6.3 Add tenant slug resolution
 - [ ] 6.4 Implement CDN caching headers
-- [ ] 6.5 Add cache invalidation on publish
-- [ ] 6.6 Verify public site delivery
+- [ ] 6.5 Serve S3-hosted images via next/image with S3 base URL
+- [ ] 6.6 Handle image deletion when slots still reference it
+- [ ] 6.7 Add cache invalidation on publish
+- **Done when:** a published site is viewable at `/s/{tenantSlug}` with template, theme, and assigned images rendering from S3 URLs.
 
 ### M7: Tracking & Pixels
 **Goal:** Customers can configure tracking pixels.
@@ -110,7 +113,7 @@ Security audit, performance optimization, monitoring, error tracking.
 - [ ] 7.2 Build tracking settings page
 - [ ] 7.3 Implement Meta Pixel injection
 - [ ] 7.4 Implement Google Analytics injection
-- [ ] 7.5 Verify tracking scripts load
+- [ ] 7.5 Done when: tracking scripts (Meta Pixel, GA) load on the published public site and fire for the configured tracking IDs.
 
 ### M8: Owner Dashboard
 **Goal:** Platform owners can manage users, tenants, and view platform state.
@@ -120,7 +123,7 @@ Security audit, performance optimization, monitoring, error tracking.
 - [ ] 8.3 Build tenants list page
 - [ ] 8.4 Implement activate/suspend tenant
 - [ ] 8.5 Build platform analytics page
-- [ ] 8.6 Verify owner authorization
+- [ ] 8.6 Done when: an OWNER can list users/tenants, activate/suspend tenants, and view platform analytics — all behind OWNER-only authorization.
 
 ### M9: Production Hardening
 **Goal:** Secure, performant, monitored production deployment.
@@ -139,13 +142,13 @@ Security audit, performance optimization, monitoring, error tracking.
 ```
 M1 (Foundation)
   └── M2 (Auth)
-        └── M3 (Dashboard)
-              ├── M4 (Templates)
+        └── M3 (Dashboard + Media/S3)
+              ├── M4 (Templates + Image Slots)
               │     └── M5 (Content)
-              │           └── M6 (Publishing)
+              │           └── M6 (Publishing + S3 image rendering)
               │                 └── M7 (Tracking)
               └── M8 (Owner Dashboard)
-                    └── M9 (Production)
+                    └── M9 (Production) depends on all of M1–M8
 ```
 
 ## Risks & Mitigations
@@ -155,16 +158,23 @@ M1 (Foundation)
 | Next.js 16 breaking changes | High | Read docs, test incrementally |
 | Better Auth + MongoDB compatibility | Medium | Use official MongoDB adapter |
 | S3 upload complexity | Medium | Use pre-signed URLs, abstract in repository |
+| S3 upload security / malicious files | High | Validate type + size server-side before signing; store only metadata |
+| Cross-tenant image access | Critical | S3 keys are tenant-scoped `tenants/{tenantId}/...`; repository always filters by tenantId |
 | i18n RTL complexity | Medium | Use next-intl, test Arabic early |
 | Multi-tenant data leaks | Critical | Repository pattern, always filter by tenantId |
 | Scope creep | High | Strict MVP, post-MVP in roadmap |
+
+## Decided
+
+| Decision | Choice |
+|----------|--------|
+| Billing provider | Polar — already configured |
+| Testing strategy | Vitest — faster, ESM-native |
+| ORM | Mongoose — simpler, MongoDB-native |
 
 ## Unresolved Decisions
 
 | Decision | Options | Status |
 |----------|---------|--------|
-| Billing provider | Polar (already in .env) vs Stripe | Polar — already configured |
 | CDN | CloudFront vs Cloudflare | TBD in M6 |
 | Error tracking | Sentry vs LogRocket | TBD in M9 |
-| Testing strategy | Vitest vs Jest | Vitest — faster, ESM-native |
-| ORM | Mongoose vs Prisma | Mongoose — simpler, MongoDB-native |
