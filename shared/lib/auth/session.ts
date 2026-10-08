@@ -1,4 +1,4 @@
-import { auth } from '@/shared/lib/auth/auth-client'
+import { getAuth } from '@/shared/lib/auth/auth-client'
 
 export interface TenantContext {
   userId: string
@@ -14,6 +14,7 @@ export interface TenantContext {
 export async function getTenantContext(
   headers: Headers
 ): Promise<TenantContext | null> {
+  const auth = await getAuth()
   const session = await auth.api.getSession({ headers })
   if (!session?.user) return null
 
@@ -55,5 +56,7 @@ export async function requireRole(
   return ctx
 }
 
-export type SessionResult = Awaited<ReturnType<typeof auth.api.getSession>>
+export type SessionResult = Awaited<
+  ReturnType<Awaited<ReturnType<typeof getAuth>>['api']['getSession']>
+>
 export type User = NonNullable<NonNullable<SessionResult>['user']>

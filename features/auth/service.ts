@@ -1,42 +1,39 @@
-import { auth } from '@/shared/lib/auth/auth-client'
+import mongoose from 'mongoose'
+import { connectToDatabase } from '@/shared/lib/db/mongoose'
 
 /**
  * Update a Better Auth user's custom fields (role, tenantId).
+ *
+ * Better Auth's MongoDB adapter stores users in the `user` collection
+ * with an ObjectId `_id`, so we update the document directly.
  * Used by auth hooks and admin operations.
  */
 export async function updateUser(
   userId: string,
   data: { role?: string; tenantId?: string }
 ) {
-  const session = await auth.api.getSession({
-    headers: {
-      'content-type': 'application/json',
-    },
-    body: {
-      userId,
-    },
-  } as any)
+  await connectToDatabase()
 
-  if (!session) {
+  const db = mongoose.connection.db
+  if (!db) {
+    throw new Error('MongoDB connection is not established')
+  }
+
+  const updates: Record<string, string> = {}
+  if (data.role !== undefined) updates.role = data.role
+  if (data.tenantId !== undefined) updates.tenantId = data.tenantId
+
+  if (Object.keys(updates).length === 0) {
+    throw new Error('No fields to update')
+  }
+
+  const result = await db
+    .collection('user')
+    .updateOne({ _id: new mongoose.Types.ObjectId(userId) }, { $set: updates })
+
+  if (result.matchedCount === 0) {
     throw new Error('User not found')
   }
 
-  // Better Auth v1.7+: update user via internal API
-  const result = await fetch(
-    `${process.env.BETTER_AUTH_URL || 'http://localhost:3000'}/api/auth/user`,
-    {
-      method: 'PATCH',
-      headers: {
-        'content-type': 'application/json',
-        Authorization: `Bearer ${session.session.token}`,
-      },
-      body: JSON.stringify(data),
-    }
-  )
-
-  if (!result.ok) {
-    throw new Error(`Failed to update user: ${result.statusText}`)
-  }
-
-  return result.json()
+  return { success: true, modified: result.modifiedCount === 1 }
 }

@@ -45,19 +45,19 @@ Security audit, performance optimization, monitoring, error tracking.
 - [~] 1.7 Add i18n support (English + Arabic, RTL/LTR) — config + messages created, component integration pending
 - [x] 1.8 Verify build passes
 
-### M2: Authentication & Authorization
+### M2: Authentication & Authorization ✅
 **Goal:** Users can sign up, sign in, and are assigned roles. Tenant created on signup.
 
-- [ ] 2.1 Install and configure Better Auth
-- [ ] 2.2 Create MongoDB connection and Mongoose setup
-- [ ] 2.3 Define User, Tenant, Site models
-- [ ] 2.4 Build sign up page
-- [ ] 2.5 Build sign in page
-- [ ] 2.6 Implement session management
-- [ ] 2.7 Add role-based authorization (CUSTOMER, OWNER)
-- [ ] 2.8 Create tenant on signup
-- [ ] 2.9 Protect dashboard routes
-- [ ] 2.10 Verify auth flow end-to-end
+- [x] 2.1 Install and configure Better Auth
+- [x] 2.2 Create MongoDB connection and Mongoose setup
+- [x] 2.3 Define User, Tenant, Site models
+- [x] 2.4 Build sign up page
+- [x] 2.5 Build sign in page
+- [x] 2.6 Implement session management
+- [x] 2.7 Add role-based authorization (CUSTOMER, OWNER)
+- [x] 2.8 Create tenant on signup
+- [x] 2.9 Protect dashboard routes
+- [x] 2.10 Verify auth flow end-to-end
 
 ### M3: Customer Dashboard
 **Goal:** Customers can manage their site, projects, and media.

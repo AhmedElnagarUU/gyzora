@@ -1,4 +1,10 @@
 import mongoose, { Schema, type Document, type Types } from 'mongoose'
+import { connectToDatabase } from '@/shared/lib/db/mongoose'
+
+// Ensure the shared MongoDB connection is established before model queries run.
+void connectToDatabase().catch((err) =>
+  console.error('MongoDB connection failed:', err)
+)
 
 export interface ITenant extends Document {
   _id: Types.ObjectId
