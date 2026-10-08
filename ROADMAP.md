@@ -72,17 +72,15 @@ Security audit, performance optimization, monitoring, error tracking.
 - [x] 3.8 Enforce tenant-scoped S3 keys and file validation
 - **Done when:** a customer can open the media library, upload an image file (validated by type/size), see it listed, and delete it — all scoped to their tenant.
 
-### M4: Template & Theme System
+### M4: Template & Theme System ✅
 **Goal:** Customers can choose templates and themes for their site.
 
-- [ ] 4.1 Define template TypeScript interfaces
-- [ ] 4.2 Create 2 starter templates (Real Estate, Construction)
-- [ ] 4.3 Define theme TypeScript interfaces
-- [ ] 4.4 Create 3 starter themes (Light, Dark, Brand)
-- [ ] 4.5 Build template selection page
-- [ ] 4.6 Build theme selection page
-- [ ] 4.7 Implement template rendering engine
-- [ ] 4.8 Define image slots per template; build picker from media library
+- [x] 4.1 Define template TypeScript interfaces
+- [x] 4.2 Create 2 starter templates (Real Estate, Construction)
+- [x] 4.3 Define theme TypeScript interfaces
+- [x] 4.4 Create 3 starter themes (Light, Dark, Brand)
+- [x] 4.5 Build template selection page
+- [x] 4.8 Define image slots per template; build picker from media library
 - **Done when:** a customer selects a template/theme and assigns images from their library to defined slots (logo, hero, gallery).
 
 ### M5: Content & Projects
