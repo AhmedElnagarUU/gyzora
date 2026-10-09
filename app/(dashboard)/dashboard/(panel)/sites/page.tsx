@@ -1,4 +1,3 @@
-import { DashboardShell } from '@/features/dashboard/components/DashboardShell'
 import { getSites } from '@/features/sites/api-client'
 import Link from 'next/link'
 
@@ -15,8 +14,7 @@ export default async function SitesListPage() {
   }
 
   return (
-    <DashboardShell>
-      <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
+    <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-2xl font-bold text-gray-900">Sites</h1>
         <Link
           href="/dashboard/sites/new"
@@ -94,6 +92,5 @@ export default async function SitesListPage() {
           </table>
         </div>
       )}
-    </DashboardShell>
-  )
+    )
 }

@@ -1,11 +1,9 @@
-import { DashboardShell } from '@/features/dashboard/components/DashboardShell'
 
 export const dynamic = 'force-dynamic'
 
 export default function SettingsPage() {
   return (
-    <DashboardShell>
-      <div className="max-w-2xl">
+    <div className="max-w-2xl">
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-900">Site Settings</h1>
           <p className="mt-2 text-sm text-gray-600">
@@ -42,6 +40,5 @@ export default function SettingsPage() {
           </div>
         </div>
       </div>
-    </DashboardShell>
-  )
+    )
 }

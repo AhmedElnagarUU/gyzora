@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { DashboardShell } from '@/features/dashboard/components/DashboardShell'
 import ProjectEditor from '@/features/projects/components/ProjectEditor'
 import { Button } from '@/shared/ui'
 import { Plus, Edit, Trash2, Calendar, Tag } from 'lucide-react'
@@ -101,8 +100,7 @@ export default function ProjectsListPage() {
     : undefined
 
   return (
-    <DashboardShell>
-      <div className="p-6 max-w-5xl mx-auto">
+    <div className="p-6 max-w-5xl mx-auto">
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Projects</h1>
@@ -218,6 +216,5 @@ export default function ProjectsListPage() {
           </div>
         )}
       </div>
-    </DashboardShell>
-  )
+    )
 }

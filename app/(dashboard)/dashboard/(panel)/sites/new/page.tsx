@@ -1,6 +1,5 @@
 'use client'
 
-import { DashboardShell } from '@/features/dashboard/components/DashboardShell'
 import { createSite } from '@/features/sites/api-client'
 import { createSiteSchema } from '@/features/sites/schema'
 import { Button, Input } from '@/shared/ui'
@@ -47,8 +46,7 @@ export default function CreateSitePage() {
   }
 
   return (
-    <DashboardShell>
-      <div className="max-w-2xl">
+    <div className="max-w-2xl">
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-900">Create New Site</h1>
           <p className="mt-2 text-sm text-gray-600">
@@ -155,6 +153,5 @@ export default function CreateSitePage() {
           </div>
         </form>
       </div>
-    </DashboardShell>
-  )
+    )
 }

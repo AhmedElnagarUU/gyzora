@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { DashboardShell } from '@/features/dashboard/components/DashboardShell'
 import { Button, Input } from '@/shared/ui'
 import { Plus, X } from 'lucide-react'
 
@@ -101,11 +100,8 @@ export default function TrackingSettingsPage() {
     }
   }
 
-  if (loading) return <DashboardShell><p className="p-6">Loading...</p></DashboardShell>
-
-  return (
-    <DashboardShell>
-      <div className="p-6 max-w-3xl mx-auto">
+  if (loading) return <p className="p-6">Loading...</p>return (
+    <div className="p-6 max-w-3xl mx-auto">
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">
@@ -218,6 +214,5 @@ export default function TrackingSettingsPage() {
           </Button>
         </div>
       </div>
-    </DashboardShell>
-  )
+    )
 }

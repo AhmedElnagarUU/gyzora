@@ -2,6 +2,8 @@ import { type NextRequest, NextResponse } from 'next/server'
 import { requireRole } from '@/shared/lib/auth/session'
 import { Tenant } from '@/features/tenants/model'
 import { Site } from '@/features/sites/model'
+import { connectToDatabase } from '@/shared/lib/db/mongoose'
+import mongoose from 'mongoose'
 
 export async function GET(req: NextRequest) {
   try {
@@ -11,17 +13,18 @@ export async function GET(req: NextRequest) {
     const SiteModel = Site
     const Project = (await import('@/features/projects/model')).Project
 
-    const [tenants, sites, projects, users] = await Promise.all([
+    const db = (await connectToDatabase()).connection.db
+    if (!db) throw new Error('MongoDB connection not established')
+
+    // Count users directly from the Better Auth 'user' collection
+    const userCount = await db
+      .collection('user')
+      .countDocuments({})
+
+    const [tenants, sites, projects] = await Promise.all([
       TenantModel.find({}).lean(),
       SiteModel.find({ status: 'PUBLISHED' }).lean(),
       Project.find({ status: 'PUBLISHED' }).lean(),
-      (await import('@/features/auth/auth-client')).getAuth().then((auth) =>
-        // Better Auth stores users in the 'user' collection
-        auth.adapter?.findMany?.('user').catch(() => [])
-      ).catch(() => {
-        // Fallback: count directly via mongoose
-        return []
-      }),
     ])
 
     const planCounts = tenants.reduce(
@@ -44,6 +47,7 @@ export async function GET(req: NextRequest) {
       totalTenants: tenants.length,
       totalSites: sites.length,
       totalProjects: projects.length,
+      totalUsers: userCount,
       planDistribution: planCounts,
       statusDistribution: statusCounts,
       recentTenants: tenants

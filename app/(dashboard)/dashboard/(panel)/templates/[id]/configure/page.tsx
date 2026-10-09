@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { DashboardShell } from '@/features/dashboard/components/DashboardShell'
 import { getTemplate, getTheme, THEMES, type ImageSlotKey } from '@/features/templates'
 import { getMedia } from '@/features/media/api-client'
 import { Button } from '@/shared/ui'
@@ -27,24 +26,20 @@ export default async function TemplateConfigPage({ params }: Props) {
 
   if (!template) {
     return (
-      <DashboardShell>
-        <div className="py-12 text-center">
+      <div className="py-12 text-center">
           <p className="text-gray-500">Template not found.</p>
           <Link href="/dashboard/templates" className="text-primary-600">
             ← Back to templates
           </Link>
         </div>
-      </DashboardShell>
-    )
+      )
   }
 
   // We wrap the async params + sync template fetch + client media picker
   // in a single client component to avoid server/client boundary issues.
   return (
-    <DashboardShell>
-      <TemplateConfigContent templateId={id} />
-    </DashboardShell>
-  )
+    <TemplateConfigContent templateId={id} />
+    )
 }
 
 function TemplateConfigContent({ templateId }: { templateId: string }) {

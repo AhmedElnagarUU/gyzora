@@ -1,6 +1,5 @@
 'use client'
 
-import { DashboardShell } from '@/features/dashboard/components/DashboardShell'
 import { TEMPLATES, getTemplate } from '@/features/templates'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -9,8 +8,7 @@ export const dynamic = 'force-dynamic'
 
 export default function TemplateSelectionPage() {
   return (
-    <DashboardShell>
-      <div className="mb-6">
+    <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Template & Theme</h1>
         <p className="mt-1 text-sm text-gray-600">
           Choose a template for your site and customize the theme.
@@ -22,8 +20,7 @@ export default function TemplateSelectionPage() {
           <TemplateCard key={template.id} template={template} />
         ))}
       </div>
-    </DashboardShell>
-  )
+    )
 }
 
 function TemplateCard({ template }: { template: any }) {

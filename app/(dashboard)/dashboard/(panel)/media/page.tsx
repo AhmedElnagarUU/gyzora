@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { DashboardShell } from '@/features/dashboard/components/DashboardShell'
 import { Button } from '@/shared/ui'
 import {
   getMedia,
@@ -103,8 +102,7 @@ export default function MediaLibraryPage() {
   }
 
   return (
-    <DashboardShell>
-      <div className="mb-6">
+    <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Media Library</h1>
         <p className="mt-1 text-sm text-gray-600">
           Manage images uploaded to your tenant&apos;s S3 storage
@@ -185,6 +183,5 @@ export default function MediaLibraryPage() {
           ))}
         </div>
       )}
-    </DashboardShell>
-  )
+    )
 }

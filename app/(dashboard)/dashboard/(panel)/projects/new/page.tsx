@@ -1,12 +1,10 @@
-import { DashboardShell } from '@/features/dashboard/components/DashboardShell'
 import Link from 'next/link'
 
 export const dynamic = 'force-dynamic'
 
 export default function NewProjectPage() {
   return (
-    <DashboardShell>
-      <div className="max-w-2xl">
+    <div className="max-w-2xl">
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-900">New Project</h1>
           <p className="mt-2 text-sm text-gray-600">
@@ -26,6 +24,5 @@ export default function NewProjectPage() {
           </Link>
         </div>
       </div>
-    </DashboardShell>
-  )
+    )
 }
