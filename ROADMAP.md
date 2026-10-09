@@ -112,15 +112,15 @@ Security audit, performance optimization, monitoring, error tracking.
 - [x] 7.4 Implement Google Analytics injection
 - [x] 7.5 Done when: tracking scripts (Meta Pixel, GA) load on the published public site and fire for the configured tracking IDs.
 
-### M8: Owner Dashboard
+### M8: Owner Dashboard ✅
 **Goal:** Platform owners can manage users, tenants, and view platform state.
 
-- [ ] 8.1 Build owner dashboard layout
-- [ ] 8.2 Build users list page
-- [ ] 8.3 Build tenants list page
-- [ ] 8.4 Implement activate/suspend tenant
-- [ ] 8.5 Build platform analytics page
-- [ ] 8.6 Done when: an OWNER can list users/tenants, activate/suspend tenants, and view platform analytics — all behind OWNER-only authorization.
+- [x] 8.1 Build owner dashboard layout
+- [x] 8.2 Build users list page
+- [x] 8.3 Build tenants list page
+- [x] 8.4 Implement activate/suspend tenant
+- [x] 8.5 Build platform analytics page
+- [x] 8.6 Done when: an OWNER can list users/tenants, activate/suspend tenants, and view platform analytics — all behind OWNER-only authorization.
 
 ### M9: Production Hardening
 **Goal:** Secure, performant, monitored production deployment.
