@@ -100,7 +100,10 @@ export default function TrackingSettingsPage() {
     }
   }
 
-  if (loading) return <p className="p-6">Loading...</p>return (
+  if (loading) return <p className="p-6">Loading...</p>
+  if (error) return <p className="p-6 text-red-600">{error}</p>
+  if (!config) return <p className="p-6">No data</p>
+  return (
     <div className="p-6 max-w-3xl mx-auto">
         <div className="flex items-center justify-between mb-6">
           <div>
