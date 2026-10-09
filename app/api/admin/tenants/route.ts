@@ -1,7 +1,8 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { Tenant } from '@/features/tenants/model'
-import { User } from '@/features/auth/model'
+import { connectToDatabase } from '@/shared/lib/db/mongoose'
 import { requireRole } from '@/shared/lib/auth/session'
+import mongoose from 'mongoose'
 
 export async function GET(req: NextRequest) {
   try {
@@ -31,9 +32,11 @@ export async function GET(req: NextRequest) {
       .sort({ createdAt: -1 })
       .lean()
 
-    // Also fetch user count per tenant
-    const users = await User.find({ role: 'CUSTOMER' }).lean()
-    const userCount = users.length
+    // Count users via Better Auth's 'user' collection
+    await connectToDatabase()
+    const db = mongoose.connection.db
+    if (!db) throw new Error('MongoDB connection not established')
+    const userCount = await db.collection('user').countDocuments({})
 
     return NextResponse.json({
       tenants,
@@ -42,8 +45,12 @@ export async function GET(req: NextRequest) {
     })
   } catch (error) {
     const msg = error instanceof Error ? error.message : 'Internal server error'
-    const status = msg.includes('UNAUTHORIZED') ? 401 : 500
-    if (msg.includes('FORBIDDEN')) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-    return NextResponse.json({ error: msg }, { status })
+    if (msg.includes('UNAUTHORIZED')) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+    if (msg.includes('FORBIDDEN')) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
+    return NextResponse.json({ error: msg }, { status: 500 })
   }
 }

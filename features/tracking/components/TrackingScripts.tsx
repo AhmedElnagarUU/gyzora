@@ -91,7 +91,6 @@ export async function TrackingScripts({ tenantSlug }: { tenantSlug: string }) {
           id={s.id}
           strategy={s.strategy}
           src={s.src}
-          onError={s.onError}
         >
           {s.content}
         </Script>

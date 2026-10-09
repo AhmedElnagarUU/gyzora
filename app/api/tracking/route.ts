@@ -36,6 +36,6 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error('POST /api/tracking error:', error)
     const msg = error instanceof Error ? error.message : 'Internal server error'
-    return NextResponse.json({ error: msg }, { status: 500 }
+    return NextResponse.json({ error: msg }, { status: 500 })
   }
 }

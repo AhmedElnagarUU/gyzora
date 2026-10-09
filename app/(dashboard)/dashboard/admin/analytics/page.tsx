@@ -7,6 +7,7 @@ interface AnalyticsData {
   totalTenants: number
   totalSites: number
   totalProjects: number
+  totalUsers: number
   planDistribution: Record<string, number>
   statusDistribution: Record<string, number>
   recentTenants: Array<{

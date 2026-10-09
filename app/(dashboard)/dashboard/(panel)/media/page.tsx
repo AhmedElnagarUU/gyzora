@@ -58,7 +58,6 @@ export default function MediaLibraryPage() {
         selectedFile.size
       )
 
-      // Upload directly to S3 using the pre-signed URL
       const uploadRes = await fetch(uploadData.uploadUrl, {
         method: 'PUT',
         body: selectedFile,
@@ -71,7 +70,6 @@ export default function MediaLibraryPage() {
         throw new Error('Upload to S3 failed')
       }
 
-      // Save metadata to MongoDB after successful S3 upload
       await confirmUpload({
         key: uploadData.key,
         url: uploadData.url,
@@ -79,7 +77,6 @@ export default function MediaLibraryPage() {
         mimeType: selectedFile.type,
       })
 
-      // Reset and refetch
       setSelectedFile(null)
       setUploadError('')
       await fetchMedia()
@@ -92,7 +89,6 @@ export default function MediaLibraryPage() {
 
   async function handleDelete(id: string) {
     if (!confirm('Delete this image? This cannot be undone.')) return
-
     try {
       await deleteMedia(id)
       setMedia((prev) => prev.filter((m) => m._id !== id))
@@ -102,7 +98,8 @@ export default function MediaLibraryPage() {
   }
 
   return (
-    <div className="mb-6">
+    <>
+      <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Media Library</h1>
         <p className="mt-1 text-sm text-gray-600">
           Manage images uploaded to your tenant&apos;s S3 storage
@@ -183,5 +180,6 @@ export default function MediaLibraryPage() {
           ))}
         </div>
       )}
-    )
+    </>
+  )
 }

@@ -22,15 +22,16 @@ export default async function DashboardPage() {
   ]
 
   return (
-    <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
-      <h1 className="text-2xl font-bold text-gray-900">Dashboard Overview</h1>
-      <Link
-        href="/dashboard/sites/new"
-        className="inline-flex items-center justify-center rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700 transition-colors"
-      >
-        Create Site
-      </Link>
-    </div>
+    <>
+      <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
+        <h1 className="text-2xl font-bold text-gray-900">Dashboard Overview</h1>
+        <Link
+          href="/dashboard/sites/new"
+          className="inline-flex items-center justify-center rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700 transition-colors"
+        >
+          Create Site
+        </Link>
+      </div>
 
     {error && (
       <div className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-600">{error}</div>
@@ -83,5 +84,6 @@ export default async function DashboardPage() {
         </div>
       )}
     </div>
+    </>
   )
 }
