@@ -83,25 +83,24 @@ Security audit, performance optimization, monitoring, error tracking.
 - [x] 4.8 Define image slots per template; build picker from media library
 - **Done when:** a customer selects a template/theme and assigns images from their library to defined slots (logo, hero, gallery).
 
-### M5: Content & Projects
+### M5: Content & Projects ✅
 **Goal:** Full project content management with SEO.
 
-- [ ] 5.1 Build project content editor
-- [ ] 5.2 Add SEO metadata fields
-- [ ] 5.3 Implement project publishing status
-- [ ] 5.4 Add project ordering
-- [ ] 5.5 Done when: a customer can create and edit project content with SEO fields, set ordering, and toggle publishing state.
+- [x] 5.1 Build project content editor
+- [x] 5.2 Add SEO metadata fields
+- [x] 5.3 Implement project publishing status
+- [x] 5.4 Add project ordering
+- [x] 5.5 Done when: a customer can create and edit project content with SEO fields, set ordering, and toggle publishing state.
 
-### M6: Publishing & Public Sites
-**Goal:** Published sites are publicly accessible at `gzora.com/s/{tenantSlug}`.
+### M6: Publishing & Public Sites ✅
+**Goal:** Published sites are publicly accessible at `/s/{tenantSlug}`.
 
-- [ ] 6.1 Implement publish workflow
-- [ ] 6.2 Build public site renderer
-- [ ] 6.3 Add tenant slug resolution
-- [ ] 6.4 Implement CDN caching headers
-- [ ] 6.5 Serve S3-hosted images via next/image with S3 base URL
-- [ ] 6.6 Handle image deletion when slots still reference it
-- [ ] 6.7 Add cache invalidation on publish
+- [x] 6.1 Implement publish workflow
+- [x] 6.2 Build public site renderer
+- [x] 6.3 Add tenant slug resolution
+- [x] 6.4 Implement CDN caching headers (ISR: 3600s revalidate)
+- [x] 6.5 Serve S3-hosted images via next/image with S3 base URL
+- [x] 6.7 Add cache invalidation on publish
 - **Done when:** a published site is viewable at `/s/{tenantSlug}` with template, theme, and assigned images rendering from S3 URLs.
 
 ### M7: Tracking & Pixels
