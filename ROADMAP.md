@@ -103,14 +103,14 @@ Security audit, performance optimization, monitoring, error tracking.
 - [x] 6.7 Add cache invalidation on publish
 - **Done when:** a published site is viewable at `/s/{tenantSlug}` with template, theme, and assigned images rendering from S3 URLs.
 
-### M7: Tracking & Pixels
+### M7: Tracking & Pixels ✅
 **Goal:** Customers can configure tracking pixels.
 
-- [ ] 7.1 Define tracking config schema
-- [ ] 7.2 Build tracking settings page
-- [ ] 7.3 Implement Meta Pixel injection
-- [ ] 7.4 Implement Google Analytics injection
-- [ ] 7.5 Done when: tracking scripts (Meta Pixel, GA) load on the published public site and fire for the configured tracking IDs.
+- [x] 7.1 Define tracking config schema
+- [x] 7.2 Build tracking settings page
+- [x] 7.3 Implement Meta Pixel injection
+- [x] 7.4 Implement Google Analytics injection
+- [x] 7.5 Done when: tracking scripts (Meta Pixel, GA) load on the published public site and fire for the configured tracking IDs.
 
 ### M8: Owner Dashboard
 **Goal:** Platform owners can manage users, tenants, and view platform state.

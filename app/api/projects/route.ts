@@ -2,12 +2,12 @@ import { type NextRequest, NextResponse } from 'next/server'
 import { getAllProjects, createProject, getProjectById, updateProject } from '@/features/projects/service'
 import { deleteProject } from '@/features/projects/repository'
 import { createProjectSchema, updateProjectSchema } from '@/features/projects/schema'
-import { getSession } from '@/shared/lib/auth/session'
+import { getTenantContext } from '@/shared/lib/auth/session'
 
 export async function GET(req: NextRequest) {
   try {
-    const session = await getSession(req as any)
-    if (!session || !session.user) {
+    const ctx = await getTenantContext(req.headers as Headers)
+    if (!ctx) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -16,14 +16,14 @@ export async function GET(req: NextRequest) {
     const id = url.searchParams.get('id')
 
     if (action === 'get' && id) {
-      const project = await getProjectById(id, session.user.tenantId as string)
+      const project = await getProjectById(id, ctx.tenantId)
       if (!project) {
         return NextResponse.json({ error: 'Project not found' }, { status: 404 })
       }
       return NextResponse.json(project)
     }
 
-    const projects = await getAllProjects(session.user.tenantId as string)
+    const projects = await getAllProjects(ctx.tenantId)
     return NextResponse.json(projects)
   } catch (error) {
     console.error('GET /api/projects error:', error)
@@ -36,8 +36,8 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const session = await getSession(req as any)
-    if (!session || !session.user) {
+    const ctx = await getTenantContext(req.headers as Headers)
+    if (!ctx) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
     }
 
     const project = await createProject({
-      tenantId: session.user.tenantId as string,
+      tenantId: ctx.tenantId,
       ...result.data,
     })
 
@@ -66,8 +66,8 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
   try {
-    const session = await getSession(req as any)
-    if (!session || !session.user) {
+    const ctx = await getTenantContext(req.headers as Headers)
+    if (!ctx) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -82,11 +82,7 @@ export async function PUT(req: NextRequest) {
     }
 
     const { id, ...rest } = result.data
-    const project = await updateProject(
-      id,
-      session.user.tenantId as string,
-      rest
-    )
+    const project = await updateProject(id, ctx.tenantId, rest)
 
     if (!project) {
       return NextResponse.json({ error: 'Project not found' }, { status: 404 })
@@ -102,8 +98,8 @@ export async function PUT(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   try {
-    const session = await getSession(req as any)
-    if (!session || !session.user) {
+    const ctx = await getTenantContext(req.headers as Headers)
+    if (!ctx) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -117,7 +113,7 @@ export async function DELETE(req: NextRequest) {
       )
     }
 
-    await deleteProject(id, session.user.tenantId as string)
+    await deleteProject(id, ctx.tenantId)
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error('DELETE /api/projects error:', error)
@@ -125,3 +121,4 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ error: msg }, { status: 500 })
   }
 }
+
