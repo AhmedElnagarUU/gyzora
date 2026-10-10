@@ -51,6 +51,8 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
+    // Only authenticated users (or platform owners) may create tenants.
+    await requireRole(req.headers, 'OWNER')
     const body: unknown = await req.json().catch(() => ({}))
     const result = createTenantSchema.safeParse(body)
 

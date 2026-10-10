@@ -1,19 +1,27 @@
-import { getSites } from '@/features/sites/api-client'
 import Link from 'next/link'
+import { headers } from 'next/headers'
+import { redirect } from 'next/navigation'
+import { getTenantContext } from '@/shared/lib/auth/session'
+import { getSitesByTenant } from '@/features/sites/service'
 
 export const dynamic = 'force-dynamic'
 
 export default async function DashboardPage() {
-  let sites = []
-  let error = null
+  const ctx = await getTenantContext(await headers())
+  if (!ctx) {
+    redirect('/auth/signin')
+  }
+
+  let sites: Awaited<ReturnType<typeof getSitesByTenant>> = []
+  let error: string | null = null
   try {
-    sites = await getSites()
+    sites = await getSitesByTenant(ctx.tenantId)
   } catch (err) {
     error = err instanceof Error ? err.message : 'Failed to load sites'
   }
 
-  const publishedSites = sites.filter((s: any) => s.status === 'PUBLISHED')
-  const draftSites = sites.filter((s: any) => s.status === 'DRAFT')
+  const publishedSites = sites.filter((s) => s.status === 'PUBLISHED')
+  const draftSites = sites.filter((s) => s.status === 'DRAFT')
 
   const stats = [
     { label: 'Total Sites', value: sites.length },
@@ -33,57 +41,56 @@ export default async function DashboardPage() {
         </Link>
       </div>
 
-    {error && (
-      <div className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-600">{error}</div>
-    )}
-
-    <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {stats.map((stat) => (
-        <div
-          key={stat.label}
-          className="rounded-lg bg-white p-6 shadow-sm"
-        >
-          <p className="text-sm text-gray-500">{stat.label}</p>
-          <p className="mt-2 text-3xl font-bold text-gray-900">{stat.value}</p>
+      {error && (
+        <div className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-600">
+          {error}
         </div>
-      ))}
-    </div>
+      )}
 
-    <div className="rounded-lg bg-white shadow-sm">
-      <div className="border-b border-gray-200 px-6 py-4">
-        <h2 className="text-lg font-medium text-gray-900">Your Sites</h2>
+      <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {stats.map((stat) => (
+          <div key={stat.label} className="rounded-lg bg-white p-6 shadow-sm">
+            <p className="text-sm text-gray-500">{stat.label}</p>
+            <p className="mt-2 text-3xl font-bold text-gray-900">
+              {stat.value}
+            </p>
+          </div>
+        ))}
       </div>
-      {sites.length === 0 ? (
-        <div className="p-6 text-center text-gray-500">
-          No sites found. Create your first site to get started.
+
+      <div className="rounded-lg bg-white shadow-sm">
+        <div className="border-b border-gray-200 px-6 py-4">
+          <h2 className="text-lg font-medium text-gray-900">Your Sites</h2>
         </div>
-      ) : (
-        <div className="divide-y divide-gray-200">
-          {sites.map((site: any) => (
-            <div
-              key={String(site._id || site.id)}
-              className="flex items-center justify-between px-6 py-4"
-            >
-              <div className="flex items-center gap-4">
+        {sites.length === 0 ? (
+          <div className="p-6 text-center text-gray-500">
+            No sites found. Create your first site to get started.
+          </div>
+        ) : (
+          <div className="divide-y divide-gray-200">
+            {sites.map((site) => (
+              <div
+                key={String(site._id)}
+                className="flex items-center justify-between px-6 py-4"
+              >
                 <div>
                   <p className="font-medium text-gray-900">{site.name}</p>
                   <p className="text-sm text-gray-500">Slug: {site.slug}</p>
                 </div>
+                <span
+                  className={
+                    site.status === 'PUBLISHED'
+                      ? 'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-green-100 text-green-800'
+                      : 'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-yellow-100 text-yellow-800'
+                  }
+                >
+                  {site.status}
+                </span>
               </div>
-              <span
-                className={
-                  site.status === 'PUBLISHED'
-                    ? 'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-green-100 text-green-800'
-                    : 'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-yellow-100 text-yellow-800'
-                }
-              >
-                {site.status}
-              </span>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
+            ))}
+          </div>
+        )}
+      </div>
     </>
   )
 }

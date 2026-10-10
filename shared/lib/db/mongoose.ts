@@ -1,11 +1,10 @@
 import mongoose from 'mongoose'
 
-const MONGODB_URI = process.env.MONGODB_URI
-const MONGODB_DB_NAME = process.env.MONGODB_DB_NAME || 'gyzora'
-
-if (!MONGODB_URI) {
-  throw new Error('MONGODB_URI environment variable is not set')
-}
+/**
+ * NOTE: Environment variables are read lazily inside `connectToDatabase()`
+ * instead of at module load. Reading them at import time caused `next build`
+ * to throw or hang while collecting page data (models are imported by routes).
+ */
 
 /**
  * Global is used to cache the MongoDB connection across hot reloads in development.
@@ -36,8 +35,15 @@ export async function connectToDatabase(): Promise<typeof mongoose> {
   }
 
   if (!cached.promise) {
-    cached.promise = mongoose.connect(MONGODB_URI!, {
-      dbName: MONGODB_DB_NAME,
+    const uri = process.env.MONGODB_URI
+    if (!uri) {
+      throw new Error('MONGODB_URI environment variable is not set')
+    }
+
+    const dbName = process.env.MONGODB_DB_NAME || 'gyzora'
+
+    cached.promise = mongoose.connect(uri, {
+      dbName,
       bufferCommands: false,
     })
   }

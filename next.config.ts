@@ -30,9 +30,12 @@ const nextConfig: NextConfig = {
               "https://www.googletagmanager.com https://connect.facebook.net " +
               "https://www.google-analytics.com; " +
               "style-src 'self' 'unsafe-inline'; " +
-              "img-src 'self' data: https:; " +
+              "img-src 'self' data: blob: https:; " +
               "font-src 'self' data: https:; " +
-              "connect-src 'self' ws: wss:; " +
+              "connect-src 'self' ws: wss: " +
+              "https://*.s3.*.amazonaws.com https://*.s3.amazonaws.com " +
+              "https://www.google-analytics.com https://analytics.google.com " +
+              "https://www.googletagmanager.com https://connect.facebook.net; " +
               "frame-ancestors 'none';",
           },
         ],

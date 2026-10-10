@@ -1,1 +1,1 @@
-export { GET, POST } from '@/features/sites/handlers'
+export { GET, POST, PUT } from '@/features/sites/handlers'

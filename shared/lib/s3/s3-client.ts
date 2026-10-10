@@ -1,24 +1,30 @@
-import AWS, { S3 } from 'aws-sdk'
+import { S3 } from 'aws-sdk'
 
-const S3_BUCKET = process.env.S3_BUCKET
-const S3_REGION = process.env.S3_REGION
-const S3_ACCESS_KEY_ID = process.env.S3_ACCESS_KEY_ID
-const S3_SECRET_ACCESS_KEY = process.env.S3_SECRET_ACCESS_KEY
-const S3_PUBLIC_BASE_URL = process.env.S3_PUBLIC_BASE_URL
+/**
+ * The S3 client is built lazily on first use so that importing this module
+ * (e.g. from a schema or route that `next build` evaluates during page-data
+ * collection) never throws when S3 env vars are absent.
+ */
+let s3Instance: S3 | null = null
 
-if (!S3_BUCKET || !S3_REGION || !S3_ACCESS_KEY_ID || !S3_SECRET_ACCESS_KEY) {
-  throw new Error('S3 environment variables are not configured')
+function getS3(): S3 {
+  if (s3Instance) return s3Instance
+
+  const region = process.env.S3_REGION
+  const accessKeyId = process.env.S3_ACCESS_KEY_ID
+  const secretAccessKey = process.env.S3_SECRET_ACCESS_KEY
+
+  if (!process.env.S3_BUCKET || !region || !accessKeyId || !secretAccessKey) {
+    throw new Error('S3 environment variables are not configured')
+  }
+
+  s3Instance = new S3({
+    region,
+    credentials: { accessKeyId, secretAccessKey },
+  })
+
+  return s3Instance
 }
-
-const s3Instance = new S3({
-  region: S3_REGION,
-  credentials: {
-    accessKeyId: S3_ACCESS_KEY_ID,
-    secretAccessKey: S3_SECRET_ACCESS_KEY,
-  },
-})
-
-export { s3Instance, S3_BUCKET, S3_PUBLIC_BASE_URL }
 
 /**
  * Generate a pre-signed URL for uploading a file to S3.
@@ -32,8 +38,8 @@ export function getPresignedUploadUrl(
 ): string {
   const fullKey = `tenants/${tenantId}/${key}`
 
-  return s3Instance.getSignedUrl('putObject', {
-    Bucket: S3_BUCKET,
+  return getS3().getSignedUrl('putObject', {
+    Bucket: process.env.S3_BUCKET,
     Key: fullKey,
     ContentType: contentType,
     ACL: 'public-read',
@@ -45,10 +51,11 @@ export function getPresignedUploadUrl(
  * Generate the public URL for a stored S3 object.
  */
 export function getPublicUrl(key: string): string {
-  if (S3_PUBLIC_BASE_URL) {
-    return `${S3_PUBLIC_BASE_URL}/${key}`
+  const publicBaseUrl = process.env.S3_PUBLIC_BASE_URL
+  if (publicBaseUrl) {
+    return `${publicBaseUrl}/${key}`
   }
-  return `https://${S3_BUCKET}.s3.${S3_REGION}.amazonaws.com/${key}`
+  return `https://${process.env.S3_BUCKET}.s3.${process.env.S3_REGION}.amazonaws.com/${key}`
 }
 
 /**

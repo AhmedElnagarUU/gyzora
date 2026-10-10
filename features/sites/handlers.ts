@@ -1,11 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireSession } from '@/shared/lib/auth/session'
-import {
-  findSitesByTenantId,
-  findSiteByTenantAndSlug,
-} from '@/features/sites/repository'
-import { createSite } from '@/features/sites/service'
+import { findSiteByTenantAndSlug } from '@/features/sites/repository'
+import { createSite, updateSite } from '@/features/sites/service'
 import { createSiteSchema } from '@/features/sites/schema'
+import { getSitesByTenant } from '@/features/sites/service'
+
+function errorStatus(message: string): number {
+  if (message === 'UNAUTHORIZED') return 401
+  if (message === 'FORBIDDEN') return 403
+  if (message === 'SLUG_TAKEN') return 409
+  return 500
+}
 
 export async function GET(req: NextRequest) {
   try {
@@ -14,7 +19,6 @@ export async function GET(req: NextRequest) {
     const slug = searchParams.get('slug')
 
     if (slug) {
-      // Tenant-scoped lookup
       const site = await findSiteByTenantAndSlug(ctx.tenantId, slug)
       if (!site) {
         return NextResponse.json(
@@ -25,13 +29,14 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ success: true, data: site })
     }
 
-    // List all sites for this tenant
-    const sites = await findSitesByTenantId(ctx.tenantId)
+    const sites = await getSitesByTenant(ctx.tenantId)
     return NextResponse.json({ success: true, data: sites })
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Internal server error'
-    const status = message === 'UNAUTHORIZED' ? 401 : 500
-    return NextResponse.json({ success: false, error: message }, { status })
+    return NextResponse.json(
+      { success: false, error: message },
+      { status: errorStatus(message) }
+    )
   }
 }
 
@@ -52,7 +57,40 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: true, data: site }, { status: 201 })
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Internal server error'
-    const status = message === 'UNAUTHORIZED' ? 401 : 500
-    return NextResponse.json({ success: false, error: message }, { status })
+    const status = errorStatus(message)
+    const friendly =
+      message === 'SLUG_TAKEN' ? 'That slug is already in use' : message
+    return NextResponse.json({ success: false, error: friendly }, { status })
+  }
+}
+
+export async function PUT(req: NextRequest) {
+  try {
+    const ctx = await requireSession(req.headers)
+    const body: unknown = await req.json().catch(() => ({}))
+    const { id, ...input } = (body ?? {}) as Record<string, unknown>
+
+    if (typeof id !== 'string' || !id) {
+      return NextResponse.json(
+        { success: false, error: 'Site id is required' },
+        { status: 400 }
+      )
+    }
+
+    const site = await updateSite(id, ctx.tenantId, input)
+    if (!site) {
+      return NextResponse.json(
+        { success: false, error: 'Site not found' },
+        { status: 404 }
+      )
+    }
+
+    return NextResponse.json({ success: true, data: site })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Internal server error'
+    const status = errorStatus(message)
+    const friendly =
+      message === 'SLUG_TAKEN' ? 'That slug is already in use' : message
+    return NextResponse.json({ success: false, error: friendly }, { status })
   }
 }

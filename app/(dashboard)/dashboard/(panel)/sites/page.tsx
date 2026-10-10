@@ -1,14 +1,23 @@
-import { getSites } from '@/features/sites/api-client'
 import Link from 'next/link'
+import { headers } from 'next/headers'
+import { redirect } from 'next/navigation'
+import { getTenantContext } from '@/shared/lib/auth/session'
+import { getSitesByTenant } from '@/features/sites/service'
+import { SitePublishButton } from '@/features/sites/components/SitePublishButton'
 
 export const dynamic = 'force-dynamic'
 
 export default async function SitesListPage() {
-  let sites = []
+  const ctx = await getTenantContext(await headers())
+  if (!ctx) {
+    redirect('/auth/signin')
+  }
+
+  let sites: Awaited<ReturnType<typeof getSitesByTenant>> = []
   let error: string | null = null
 
   try {
-    sites = await getSites()
+    sites = await getSitesByTenant(ctx.tenantId)
   } catch (err) {
     error = err instanceof Error ? err.message : 'Failed to load sites'
   }
@@ -26,7 +35,9 @@ export default async function SitesListPage() {
       </div>
 
       {error && (
-        <div className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-600">{error}</div>
+        <div className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-600">
+          {error}
+        </div>
       )}
 
       {sites.length === 0 ? (
@@ -38,17 +49,29 @@ export default async function SitesListPage() {
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Slug</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Template</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Theme</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Name
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Slug
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Template
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Theme
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Status
+                </th>
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {sites.map((site: any) => (
-                <tr key={String(site._id || site.id)}>
+              {sites.map((site) => (
+                <tr key={String(site._id)}>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     {site.name}
                   </td>
@@ -73,7 +96,21 @@ export default async function SitesListPage() {
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <span className="text-gray-400">—</span>
+                    <div className="flex items-center justify-end gap-3">
+                      {site.status === 'PUBLISHED' && (
+                        <Link
+                          href={`/s/${site.slug}`}
+                          target="_blank"
+                          className="text-primary-600 hover:text-primary-500"
+                        >
+                          View
+                        </Link>
+                      )}
+                      <SitePublishButton
+                        id={String(site._id)}
+                        status={site.status}
+                      />
+                    </div>
                   </td>
                 </tr>
               ))}

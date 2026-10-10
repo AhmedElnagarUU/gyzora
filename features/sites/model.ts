@@ -1,10 +1,4 @@
 import mongoose, { Schema, type Document, type Types } from 'mongoose'
-import { connectToDatabase } from '@/shared/lib/db/mongoose'
-
-// Ensure the shared MongoDB connection is established before model queries run.
-void connectToDatabase().catch((err) =>
-  console.error('MongoDB connection failed:', err)
-)
 
 export interface ISite extends Document {
   _id: Types.ObjectId
@@ -34,6 +28,7 @@ export const siteSchema = new Schema<ISite>(
     slug: {
       type: String,
       required: true,
+      lowercase: true,
       trim: true,
     },
     template: {
@@ -59,7 +54,9 @@ export const siteSchema = new Schema<ISite>(
   }
 )
 
-// Compound index for tenant-scoped site lookups
+// Public sites are resolved by slug alone (`/s/{slug}`), so slugs must be
+// globally unique. The compound index below is kept for tenant-scoped lookups.
+siteSchema.index({ slug: 1 }, { unique: true })
 siteSchema.index({ tenantId: 1, slug: 1 })
 
 export const Site =

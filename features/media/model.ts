@@ -1,9 +1,4 @@
 import mongoose, { Schema, type Document, type Types } from 'mongoose'
-import { connectToDatabase } from '@/shared/lib/db/mongoose'
-
-void connectToDatabase().catch((err) =>
-  console.error('MongoDB connection failed:', err)
-)
 
 export interface IMedia extends Document {
   _id: Types.ObjectId

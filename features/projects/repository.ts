@@ -1,6 +1,8 @@
+import { connectToDatabase } from '@/shared/lib/db/mongoose'
 import { Project } from '@/features/projects/model'
 
 export async function findProjectsByTenant(tenantId: string) {
+  await connectToDatabase()
   return Project.find({ tenantId }).sort({ order: -1, createdAt: -1 }).lean()
 }
 
@@ -8,6 +10,7 @@ export async function findProjectByIdAndTenant(
   id: string,
   tenantId: string
 ) {
+  await connectToDatabase()
   return Project.findOne({ _id: id, tenantId: tenantId as any }).lean()
 }
 
@@ -32,6 +35,7 @@ export async function createProjectRecord(data: {
     mimeType?: string
   }>
 }) {
+  await connectToDatabase()
   return Project.create(data)
 }
 
@@ -59,6 +63,7 @@ export async function updateProjectRecord(
     }>
   }>
 ) {
+  await connectToDatabase()
   return Project.findOneAndUpdate(
     { _id: id, tenantId: tenantId as any },
     { $set: data },
@@ -67,5 +72,6 @@ export async function updateProjectRecord(
 }
 
 export async function deleteProject(id: string, tenantId: string) {
+  await connectToDatabase()
   return Project.deleteOne({ _id: id, tenantId: tenantId as any })
 }

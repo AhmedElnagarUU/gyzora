@@ -1,8 +1,7 @@
-import { Site } from '@/features/sites/model'
 import { Tenant } from '@/features/tenants/model'
+import { findPublishedSiteBySlug } from '@/features/sites/repository'
 import { getTemplate } from '@/features/templates'
 import { getTheme } from '@/features/templates/theme'
-import { connectToDatabase } from '@/shared/lib/db/mongoose'
 
 export interface PublicSiteData {
   site: {
@@ -26,13 +25,7 @@ export interface PublicSiteData {
 export async function getPublishedSiteBySlug(
   slug: string
 ): Promise<PublicSiteData | null> {
-  await connectToDatabase()
-
-  const site = await Site.findOne({
-    slug,
-    status: 'PUBLISHED',
-  }).lean()
-
+  const site = await findPublishedSiteBySlug(slug)
   if (!site) return null
 
   const tenant = await Tenant.findById(site.tenantId).lean()
@@ -72,9 +65,10 @@ export async function getSiteImageSlots(
     >
   >
 > {
-  const Project = (await import('@/features/projects/model')).Project
+  const { Project } = await import('@/features/projects/model')
 
   const projects = await Project.find({
+    tenantId,
     siteId,
     status: 'PUBLISHED',
     images: { $exists: true, $ne: [] },
@@ -82,7 +76,7 @@ export async function getSiteImageSlots(
 
   const slots: Record<string, { url: string; alt?: string }> = {}
 
-  // Map project images to template slots
+  // Map project images to template slots.
   if (projects.length > 0) {
     const firstProject = projects[0]
     if (firstProject.images && firstProject.images.length > 0) {
@@ -99,8 +93,8 @@ export async function getSiteImageSlots(
     }
   }
 
-  // TODO: In a fuller implementation, image slot assignments would come from
-  // the SiteTemplateAssignment model. For now we use project images.
+  // NOTE: explicit site↔image-slot assignments are not persisted yet (see
+  // docs/KNOWN_ISSUES.md). Slots currently derive from published project images.
 
   return slots
 }
