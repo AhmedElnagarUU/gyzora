@@ -40,7 +40,7 @@ feature would inherit the same violations. This epic freezes the rules
 | ID | Title | Depends on | Status |
 |---|---|---|---|
 | MILESTONE-001 | Baseline Verification & API Boundary/Contract Cleanup | — | **Done** (2026-10-11) |
-| MILESTONE-002 | Environment & Configuration Hardening | — | Not Started |
+| MILESTONE-002 | Environment & Configuration Hardening | — | **Done** (2026-10-11) |
 
 ## 7. Dependencies
 
@@ -51,8 +51,8 @@ feature would inherit the same violations. This epic freezes the rules
 
 - [x] Every `app/api/**/route.ts` is a thin re-export (DEC-003). *(M-001)*
 - [x] Every handler returns `{ success, data }` or `{ success, error }`. *(M-001)*
-- [ ] Env is validated once and `.env.example` matches (DEC-008). *(M-002 — pending)*
-- [x] `typecheck`, `lint`, `build` pass. *(M-001)*
+- [x] Env is validated once and `.env.example` matches (DEC-008). *(M-002)*
+- [x] `typecheck`, `lint`, `build` pass. *(M-001/M-002)*
 - [x] Baseline re-verified with recorded evidence. *(M-001 — `docs/reports/BASELINE.md`)*
 
 ## 9. Risks & open decisions

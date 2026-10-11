@@ -29,7 +29,7 @@ module not listed does not exist.
 | Auth | `shared/lib/auth/auth-client.ts` / `session-client.ts` | client hooks |
 | S3 | `shared/lib/s3/s3-client.ts` | Pre-signed URLs, public URL, MIME/size limits |
 | Images | `shared/lib/images/pexels.ts` *(to add, M-017)* | Optional server-side Pexels provider |
-| Env | `shared/lib/env.ts` *(to add, M-002)* | Zod-validated server env |
+| Env | `shared/lib/env.ts` | Zod-validated server env (lazy `getEnv()`/typed `env`; `publicEnv`) |
 | i18n | `shared/i18n/` | Locale helpers, direction, fallback *(to extend)* |
 | UI | `shared/ui/` | Button, Input, Modal, Header, Footer |
 

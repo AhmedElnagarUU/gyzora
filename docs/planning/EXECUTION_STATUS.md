@@ -15,12 +15,13 @@ same change as the work it describes, with real evidence — never intent
 
 ## Current state
 
-- **Phase:** Phase A (stabilize) — **in progress** (M-001 Done, M-002 pending).
-- **First actionable milestone:** **`MILESTONE-002`** (no prerequisites).
+- **Phase:** Phase A (stabilize) — **complete** (M-001, M-002 both Done → EPIC-001 done).
+- **First actionable milestone:** **`MILESTONE-013`** (EPIC-006; depends on M-001 + M-002).
 - **Baseline commands (pre-recovery, verified):** `typecheck` pass, `lint` pass
   (0 errors/44 warnings), `build` pass. No test framework.
-- **Post-M-001 (verified 2026-10-11):** `typecheck` pass; `lint` 0 errors/30
-  warnings; `build` pass — 31 routes. See `docs/reports/BASELINE.md`.
+- **Post-M-001/M-002 (verified 2026-10-11):** `typecheck` pass; `lint` 0 errors/30
+  warnings; `build` pass — 31 routes, verified without `.env` present (AC-04).
+  See `docs/reports/BASELINE.md`, `MILESTONE-001`, `MILESTONE-002`.
 - **Blocked:** authenticated-endpoint runtime verification requires a usable
   MongoDB session (`U-01`); resolves with `MILESTONE-025`. Unauth endpoint
   behavior was exercised (401 envelopes; see BASELINE.md).
@@ -30,7 +31,7 @@ same change as the work it describes, with real evidence — never intent
 | ID | Title | Epic | Depends on | Status | Owner | Evidence |
 |---|---|---|---|---|---|---|
 | M-001 | Baseline Verification & API Boundary/Contract Cleanup | 001 | — | **Done** | Lead Eng. Agent | typecheck pass; lint 0/30; build pass (31 routes); 12 thin routes; 401 envelopes runtime-verified; independent review: 0 blockers (`docs/milestones/EPIC-001/MILESTONE-001.md` §16–17) |
-| M-002 | Environment & Configuration Hardening | 001 | — | Not Started | — | — |
+| M-002 | Environment & Configuration Hardening | 001 | — | **Done** | Lead Eng. Agent | `shared/lib/env.ts` (Zod, lazy) wired into DB/auth/S3; `.env.example` synced; typecheck pass; lint 0/30; build pass WITHOUT `.env`; 5/5 env smoke cases pass (`docs/milestones/EPIC-001/MILESTONE-002.md`) |
 | M-003 | Site Ownership & One-Site-Per-User | 002 | M-001, M-013 | Not Started | — | — |
 | M-004 | Bilingual Site Content & Published Snapshot Schema | 002 | M-001, M-013 | Not Started | — | — |
 | M-005 | Project↔Site Linkage & Bilingual Project Schema | 002 | M-001, M-013 | Not Started | — | — |
@@ -60,10 +61,11 @@ same change as the work it describes, with real evidence — never intent
 
 ## Ready queue (all prerequisites Done)
 
-1. `MILESTONE-002` — Environment & Configuration Hardening
+1. `MILESTONE-013` — Template Content Schema, Section Contract & Default Content
+   (EPIC-006; depends on M-001, M-002 — both Done)
 
-`M-001` is Done; `M-002` is the only remaining EPIC-001 milestone (no
-prerequisites) and unblocks `M-013` and `M-025`.
+With EPIC-001 complete, `M-013` is the next actionable milestone; it unblocks
+M-003, M-004, M-005 (EPIC-002) and M-014+ (EPIC-006).
 
 ## Review findings (from M-001 independent review — not yet scheduled)
 
@@ -95,6 +97,7 @@ declared change set. They are tracked here rather than silently fixed.
 |---|---|---|
 | 2026-10-11 | Initial status snapshot; all milestones `Not Started`; first actionable `MILESTONE-001` | Recovery planning |
 | 2026-10-11 | **M-001 Done** — thin routes + envelope across projects/tracking/admin/auth-session/health; consumers updated; D-14 refs fixed; `PUT /api/sites` 400 mapping; typecheck/lint(0/30)/build pass; 401 envelopes runtime-verified. Added Review findings RF-1…RF-6. Ready queue → M-002 | Lead Eng. Agent |
+| 2026-10-11 | **M-002 Done** — `shared/lib/env.ts` (Zod, lazy, typed) reads through DB/auth/S3 bootstrap; `.env.example` synced; build verified without `.env`; 5/5 env smoke cases pass. **EPIC-001 complete** (M-001+M-002). Ready queue → M-013 | Lead Eng. Agent |
 
 ## How to update
 

@@ -118,8 +118,9 @@ Phase G (publish + web)  M-023 → M-020 ; M-021 → M-022 ; M-024
 Phase H (verify + ship)  M-025, M-026, M-027 → M-028
 ```
 
-`MILESTONE-001` is **Done** (2026-10-11); `MILESTONE-002` is the next
-actionable milestone. Live status: `EXECUTION_STATUS.md`.
+`MILESTONE-001` and `MILESTONE-002` are **Done** (2026-10-11; EPIC-001
+complete). `MILESTONE-013` is the next actionable milestone. Live status:
+`EXECUTION_STATUS.md`.
 
 ## MVP acceptance mapping
 
