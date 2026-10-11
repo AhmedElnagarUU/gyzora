@@ -6,7 +6,7 @@ import {
 } from '@/features/sites/public-service'
 import { TemplateRenderer } from '@/features/templates/components/TemplateRenderer'
 import { getThemeClass } from '@/features/templates/theme'
-import { TEMPLATES } from '@/features/templates/types'
+import { TEMPLATES } from '@/features/templates'
 
 export const revalidate = 3600 // 1 hour ISR
 

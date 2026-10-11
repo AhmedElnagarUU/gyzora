@@ -7,8 +7,8 @@
 | ID | MILESTONE-013 |
 | Epic | EPIC-006 — Template System & Quality |
 | Title | Template Content Schema, Section Contract & Default Content |
-| Status | Not Started |
-| Owner | — |
+| Status | Done |
+| Owner | Lead Engineering Agent |
 | Depends on | M-001, M-002 |
 | Blocks | M-003*, M-004, M-005, M-008, M-014, M-015, M-016 |
 | PRD refs | FR-04, FR-05, FR-10, PA-06 |
@@ -109,6 +109,16 @@ See `project/TEMPLATE_SYSTEM.md` §1–3. Key types: `SiteContent`, `LocalizedTe
 - Unit: both templates provide all six pages.
 - `typecheck`, `lint`, `build` pass.
 
+### Task results (2026-10-11)
+
+| Task | Result | Evidence |
+|---|---|---|
+| T01 — Types | **Done** | `features/templates/types.ts` rewritten: full contract (`TemplateDefinition`, `SiteContent`, `LocalizedText`, `ImageRef`, `SectionType`, `TemplatePage`, `TemplateTheme`, `Locale`, `TemplateCategory`); legacy `imageSlots`/`defaultTheme` retained so existing tooling keeps compiling |
+| T02 — Section schemas | **Done** | `features/templates/schema.ts`: `localizedTextSchema`, `imageRefSchema`, `imageRefsSchema` (partial slot map), `siteContentSchema`, `SECTION_SCHEMAS` covering all 12 `SectionType`s |
+| T03 — Default content | **Done** | `features/templates/content.ts`: `defaultRealEstateContent` + `defaultConstructionContent` — bilingual (`en`/`ar`) generic text, `isSampleContent: true`, no fabricated stats/claims |
+| T04 — Clone helper | **Done** | `cloneTemplateContent(template, companyInput)` — `structuredClone` deep copy + localized overlay; runtime-verified immutability |
+| T05 — Registry | **Done** | `features/templates/index.ts`: `TEMPLATES`, `getTemplate(id|slug)`, `listTemplates()`; definitions under `definitions/{real-estate,construction}/definition.ts` |
+
 ## 16. Acceptance criteria
 
 - **AC-01** — A single `SiteContent` contract is defined and used by both
@@ -119,6 +129,32 @@ See `project/TEMPLATE_SYSTEM.md` §1–3. Key types: `SiteContent`, `LocalizedTe
 - **AC-04** — Default content is bilingual, generic, and flagged sample.
 - **AC-05** — `cloneTemplateContent` deep-copies (verified by test).
 - **AC-06** — `typecheck`/`lint`/`build` pass.
+
+### Acceptance results (2026-10-11)
+
+| AC | Result | Evidence |
+|---|---|---|
+| AC-01 | **Pass** | One `SiteContent` shape (`types.ts`) used by both definitions; runtime check confirms both share `SECTION_SCHEMAS` |
+| AC-02 | **Pass** | 12 `SectionType`s; `SECTION_SCHEMAS` covers every type (runtime `section-schemas-complete` true); unknown-section skipping is M-014 |
+| AC-03 | **Pass** | Both definitions declare `home/about/services/projects/project-detail/contact` (runtime `pages-real-estate`/`pages-construction` true) |
+| AC-04 | **Pass** | Defaults bilingual `en`+`ar`; runtime `bilingual-*`/`sample-*`/`no-stats-*` true; generic wording, no fabricated numbers |
+| AC-05 | **Pass** | `cloneTemplateContent` deep-clones via `structuredClone`; runtime `clone-source-immutable` + `clone-result-isolated` true after aggressive mutation |
+| AC-06 | **Pass** | `typecheck` pass; `lint` 0 errors/30 warnings (pre-existing); `build` pass (31 routes) |
+
+### Verification (commands actually run, 2026-10-11)
+
+```
+npm run typecheck   # pass, exit 0
+npm run lint        # 0 errors, 30 warnings (pre-existing)
+npm run build       # pass, exit 0 — 31 routes
+Runtime check: temporary GET /api/m13-check route via `npm run dev`
+  → 24/24 checks true; route removed after verification.
+```
+
+Verified behaviors: registry resolves both templates by `id` and `slug`,
+returns `undefined` for unknown ids; both defaults pass `siteContentSchema`
+while an empty `company.name` is rejected; a deeply mutated clone leaves the
+template definition and the original clone untouched.
 
 ## 17. Handoff & risks
 

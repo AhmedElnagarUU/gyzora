@@ -1,10 +1,30 @@
+import type { z } from 'zod'
+
 /**
- * Template definition interfaces.
+ * Template contract — the single data model shared by every template, editor,
+ * and renderer (EPIC-006, `docs/project/TEMPLATE_SYSTEM.md`, DEC-002/DEC-006).
  *
- * Templates define the structure and layout of a tenant's site.
- * Each template has named "image slots" that map to uploaded media.
+ * Templates are immutable code-resident definitions. Customer data lives only
+ * in `Site.content` / `Site.published`, never in a definition. All customer
+ * editable text is `LocalizedText` (bilingual `en`/`ar`, DEC-005).
  */
 
+export type Locale = 'en' | 'ar'
+
+/** Bilingual text. `en` is the default locale; `ar` may be empty in drafts. */
+export interface LocalizedText {
+  en: string
+  ar: string
+}
+
+/** A referenced image. `alt` is required and localized (FR-08). */
+export interface ImageRef {
+  url: string
+  alt: LocalizedText
+  source: 'upload' | 'pexels' | 'bundled'
+}
+
+/** Named image slots a template exposes; filled per-customer from media. */
 export type ImageSlotKey =
   | 'logo'
   | 'hero'
@@ -22,137 +42,153 @@ export interface ImageSlotDefinition {
   required: boolean
 }
 
-export interface SectionDefinition {
-  key: string
-  label: string
-  description: string
-  slots: ImageSlotKey[]
-  required: boolean
+/**
+ * Closed union of section types. Each type maps to exactly one section
+ * component (M-014). Unknown types are skipped, never crashed on.
+ */
+export type SectionType =
+  | 'hero'
+  | 'intro'
+  | 'services'
+  | 'features'
+  | 'featured-projects'
+  | 'stats'
+  | 'process'
+  | 'cta'
+  | 'contact'
+  | 'about-body'
+  | 'project-grid'
+  | 'project-detail'
+
+export type TemplateCategory = 'real-estate' | 'construction'
+
+/**
+ * Page composition: which sections render, in which order, on each page.
+ * Both MVP templates declare Home, About, Services, Projects, Project Details,
+ * and Contact (FR-05); the composition differs to give each a distinct
+ * identity (TEMPLATE_SYSTEM §5, §9).
+ */
+export interface TemplatePage {
+  /** Stable page id, e.g. `home`, `about`, `project-detail`. */
+  id: string
+  /** Public path. `project-detail` is a template route (`/projects/[slug]`). */
+  slug: string
+  name: LocalizedText
+  sections: SectionType[]
 }
 
+/** Per-template color/typography tokens applied by the renderer (M-014). */
+export interface TemplateTheme {
+  /** Theme id — mirrors the legacy `defaultTheme` string used by tooling. */
+  id: string
+  mode: 'light' | 'dark'
+  colors: {
+    primary: string
+    secondary: string
+    accent: string
+    background: string
+    foreground: string
+    card: string
+    border: string
+  }
+  fonts: {
+    sans: string
+    heading: string
+  }
+}
+
+// ─── SiteContent — the customer-owned data contract ─────────────────────────
+
+export interface CompanyContent {
+  name: string
+  tagline: LocalizedText
+  description: LocalizedText
+  logo?: ImageRef
+  favicon?: ImageRef
+}
+
+export interface AboutContent {
+  title: LocalizedText
+  body: LocalizedText
+  mission?: LocalizedText
+  vision?: LocalizedText
+  image?: ImageRef
+}
+
+export interface ServiceItem {
+  id: string
+  title: LocalizedText
+  description: LocalizedText
+  /** lucide-react icon name (DEC-006: lucide only). */
+  icon: string
+  image?: ImageRef
+}
+
+export interface FeatureItem {
+  id: string
+  title: LocalizedText
+  description: LocalizedText
+  icon: string
+}
+
+/** Only populated with real customer data — never fabricated (FR-05). */
+export interface StatItem {
+  id: string
+  label: LocalizedText
+  value: string
+}
+
+export interface ProcessStep {
+  id: string
+  step: number
+  title: LocalizedText
+  description: LocalizedText
+}
+
+export interface ContactContent {
+  phone?: string
+  email?: string
+  address?: LocalizedText
+  mapUrl?: string
+  social?: Record<string, string>
+}
+
+/**
+ * The content shape shared by all templates. Templates differ by which
+ * sections they compose and their theme — never by a divergent data model.
+ *
+ * `projects` are NOT part of `SiteContent`; they live in their own collection
+ * and are passed to the renderer separately (TEMPLATE_SYSTEM §2).
+ */
+export interface SiteContent {
+  company: CompanyContent
+  about: AboutContent
+  services: ServiceItem[]
+  features: FeatureItem[]
+  /** Optional; renderers omit when absent. Never populated with fake numbers. */
+  stats?: StatItem[]
+  process?: ProcessStep[]
+  contact: ContactContent
+  images: Partial<Record<ImageSlotKey, ImageRef>>
+  isSampleContent?: boolean
+}
+
+/** The immutable, code-resident template definition (DEC-002). */
 export interface TemplateDefinition {
   id: string
-  name: string
   slug: string
+  name: string
   description: string
+  category: TemplateCategory
+  supportedLocales: Locale[]
   previewImage: string
-  imageSlots: ImageSlotDefinition[]
-  sections: SectionDefinition[]
+  /** Legacy theme id (configure tooling); mirrors `theme.id`. */
   defaultTheme: string
+  theme: TemplateTheme
+  imageSlots: ImageSlotDefinition[]
+  pages: TemplatePage[]
+  /** Per-section content contract shared by all templates. */
+  sectionSchemas: Record<SectionType, z.ZodType>
+  /** Bilingual seed content — deep-cloned per site, never mutated. */
+  defaultContent: SiteContent
 }
-
-export const TEMPLATES: TemplateDefinition[] = [
-  {
-    id: 'real-estate',
-    name: 'Real Estate',
-    slug: 'real-estate',
-    description:
-      'Modern template designed for real estate agencies. Showcases property listings with image galleries and contact forms.',
-    previewImage: '/templates/real-estate-preview.jpg',
-    defaultTheme: 'light',
-    imageSlots: [
-      {
-        key: 'logo',
-        label: 'Logo',
-        description: 'Site logo (recommended: 200x60)',
-        aspectRatio: '3.33:1',
-        width: 200,
-        height: 60,
-        required: true,
-      },
-      {
-        key: 'hero',
-        label: 'Hero Image',
-        description: 'Main hero banner image (recommended: 1920x800)',
-        aspectRatio: '2.4:1',
-        width: 1920,
-        height: 800,
-        required: true,
-      },
-      {
-        key: 'hero-mobile',
-        label: 'Hero Mobile',
-        description: 'Mobile hero image (recommended: 800x600)',
-        aspectRatio: '4:3',
-        width: 800,
-        height: 600,
-        required: false,
-      },
-      {
-        key: 'favicon',
-        label: 'Favicon',
-        description: 'Site favicon (recommended: 32x32)',
-        aspectRatio: '1:1',
-        width: 32,
-        height: 32,
-        required: false,
-      },
-    ],
-    sections: [
-      {
-        key: 'hero',
-        label: 'Hero Section',
-        description: 'Top banner with headline and call-to-action',
-        slots: ['hero', 'hero-mobile'],
-        required: true,
-      },
-      {
-        key: 'gallery',
-        label: 'Property Gallery',
-        description: 'Property image gallery section',
-        slots: ['gallery'],
-        required: false,
-      },
-    ],
-  },
-  {
-    id: 'construction',
-    name: 'Construction',
-    slug: 'construction',
-    description:
-      'Bold template built for construction and contracting businesses. Highlights projects with large hero images and portfolio grids.',
-    previewImage: '/templates/construction-preview.jpg',
-    defaultTheme: 'dark',
-    imageSlots: [
-      {
-        key: 'logo',
-        label: 'Logo',
-        description: 'Site logo (recommended: 200x80)',
-        aspectRatio: '2.5:1',
-        width: 200,
-        height: 80,
-        required: true,
-      },
-      {
-        key: 'hero',
-        label: 'Hero Image',
-        description: 'Main hero image (recommended: 1920x1080)',
-        aspectRatio: '16:9',
-        width: 1920,
-        height: 1080,
-        required: true,
-      },
-      {
-        key: 'favicon',
-        label: 'Favicon',
-        description: 'Site favicon (recommended: 32x32)',
-        aspectRatio: '1:1',
-        width: 32,
-        height: 32,
-        required: false,
-      },
-    ],
-    sections: [
-      {
-        key: 'hero',
-        label: 'Hero Section',
-        description: 'Header banner with navigation overlay',
-        slots: ['hero'],
-        required: true,
-      },
-    ],
-  },
-]
-
-export const getTemplate = (id: string): TemplateDefinition | undefined =>
-  TEMPLATES.find((t) => t.id === id || t.slug === id)
