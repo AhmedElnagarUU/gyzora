@@ -1,8 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Button } from '@/shared/ui'
-import { Building, PauseCircle, PlayCircle } from 'lucide-react'
+import { PauseCircle, PlayCircle } from 'lucide-react'
 
 interface Tenant {
   _id: string
@@ -38,7 +37,7 @@ export default function TenantsListPage() {
         throw new Error('Failed to fetch')
       }
       const result = await res.json()
-      setData(result)
+      setData(result.data)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load')
     } finally {
@@ -52,15 +51,19 @@ export default function TenantsListPage() {
 
   const toggleStatus = async (id: string, current: string) => {
     setActionLoading(id)
-    const newStatus = current === 'ACTIVE' ? 'suspend' : 'activate'
+    const action = current === 'ACTIVE' ? 'suspend' : 'activate'
     try {
-      const res = await fetch(
-        `/api/admin/tenants?action=${newStatus}&id=${id}`,
-        { method: 'GET', credentials: 'include' }
-      )
+      const res = await fetch('/api/admin/tenants', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, action }),
+        credentials: 'include',
+      })
       const result = await res.json()
       if (res.ok && result.success) {
         await fetchTenants()
+      } else {
+        throw new Error(result.error || 'Action failed')
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Action failed')

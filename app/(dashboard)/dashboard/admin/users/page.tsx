@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Button } from '@/shared/ui'
 import { Users, Shield } from 'lucide-react'
 
 interface User {
@@ -33,7 +32,7 @@ export default function UsersListPage() {
         throw new Error('Failed to fetch')
       }
       const result = await res.json()
-      setData(result)
+      setData(result.data)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load')
     } finally {

@@ -37,3 +37,62 @@ export async function updateUser(
 
   return { success: true, modified: result.modifiedCount === 1 }
 }
+
+export interface AuthUserSummary {
+  id: string
+  name?: string
+  email: string
+  role: string
+  tenantId?: string
+  createdAt?: string
+}
+
+/**
+ * Owner console: list Better Auth users (cross-tenant, explicit owner
+ * function). Uses the `user` collection owned by the auth adapter.
+ */
+export async function listAuthUsersForOwner(
+  role?: string
+): Promise<AuthUserSummary[]> {
+  await connectToDatabase()
+
+  const db = mongoose.connection.db
+  if (!db) {
+    throw new Error('MongoDB connection is not established')
+  }
+
+  const filter: Record<string, unknown> = {}
+  if (role) filter.role = role
+
+  const users = await db
+    .collection('user')
+    .find(filter)
+    .sort({ createdAt: -1 })
+    .toArray()
+
+  return users.map((u) => ({
+    id: String(u._id),
+    name: typeof u.name === 'string' ? u.name : undefined,
+    email: typeof u.email === 'string' ? u.email : '',
+    role: typeof u.role === 'string' ? u.role : 'CUSTOMER',
+    tenantId: typeof u.tenantId === 'string' ? u.tenantId : undefined,
+    createdAt:
+      u.createdAt instanceof Date
+        ? u.createdAt.toISOString()
+        : typeof u.createdAt === 'string'
+          ? u.createdAt
+          : undefined,
+  }))
+}
+
+/** Owner console: total Better Auth user count. */
+export async function countAuthUsersForOwner(): Promise<number> {
+  await connectToDatabase()
+
+  const db = mongoose.connection.db
+  if (!db) {
+    throw new Error('MongoDB connection is not established')
+  }
+
+  return db.collection('user').countDocuments({})
+}

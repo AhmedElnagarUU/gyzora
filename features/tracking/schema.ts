@@ -17,6 +17,12 @@ export const trackingConfigSchema = z.object({
   trackers: z.array(trackingSchema).optional().default([]),
 })
 
+/** Request body for `POST /api/tracking` (tenantId always comes from session). */
+export const upsertTrackingConfigSchema = z.object({
+  siteId: z.string().optional(),
+  trackers: z.array(trackingSchema).optional().default([]),
+})
+
 export const updateTrackingSchema = z.object({
   id: z.string(),
   name: z.string().min(1).optional(),

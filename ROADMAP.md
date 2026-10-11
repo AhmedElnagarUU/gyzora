@@ -1,4 +1,16 @@
-# Gzora — Technical Roadmap
+> ## ⚠️ SUPERSEDED — archival only
+>
+> This root file predates the recovery effort. The **canonical plan** is
+> `docs/planning/ROADMAP.md` (epics + milestones + dependencies), with live
+> status in `docs/planning/EXECUTION_STATUS.md` and contract/decision docs under
+> `docs/`. Do **not** use this file to plan or implement work.
+>
+> What follows is the original pre-recovery roadmap, retained verbatim as
+> historical record.
+
+---
+
+# Gzora — Technical Roadmap (historical)
 
 ## Epics
 

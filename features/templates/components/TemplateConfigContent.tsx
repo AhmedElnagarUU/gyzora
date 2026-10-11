@@ -61,7 +61,8 @@ export function TemplateConfigContent({ templateId }: { templateId: string }) {
   }
 
   const handleSave = () => {
-    // Persisting slot assignments requires the site↔slot model (see KNOWN_ISSUES).
+    // Persisting slot assignments requires the site↔slot model
+    // (see docs/reports/DIAGNOSIS.md, D-04).
     alert('Template configuration saved! (persistence pending)')
   }
 

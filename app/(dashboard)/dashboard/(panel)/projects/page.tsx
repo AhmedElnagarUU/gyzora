@@ -39,8 +39,8 @@ export default function ProjectsListPage() {
     try {
       const res = await fetch('/api/projects')
       if (!res.ok) throw new Error('Failed to fetch projects')
-      const data = await res.json()
-      setProjects(data)
+      const result = await res.json()
+      setProjects(result.data)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load')
     } finally {

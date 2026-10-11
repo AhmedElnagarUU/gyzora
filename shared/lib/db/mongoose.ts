@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import { getEnv } from '@/shared/lib/env'
 
 /**
  * NOTE: Environment variables are read lazily inside `connectToDatabase()`
@@ -35,12 +36,7 @@ export async function connectToDatabase(): Promise<typeof mongoose> {
   }
 
   if (!cached.promise) {
-    const uri = process.env.MONGODB_URI
-    if (!uri) {
-      throw new Error('MONGODB_URI environment variable is not set')
-    }
-
-    const dbName = process.env.MONGODB_DB_NAME || 'gyzora'
+    const { MONGODB_URI: uri, MONGODB_DB_NAME: dbName } = getEnv()
 
     cached.promise = mongoose.connect(uri, {
       dbName,

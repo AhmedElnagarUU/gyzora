@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { BarChart3, Building, FileText, Layout } from 'lucide-react'
+import { Building, FileText, Layout } from 'lucide-react'
 
 interface AnalyticsData {
   totalTenants: number
@@ -37,7 +37,7 @@ export default function AnalyticsPage() {
         throw new Error('Failed to fetch')
       }
       const result = await res.json()
-      setData(result)
+      setData(result.data)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load')
     } finally {

@@ -94,7 +94,8 @@ export async function getSiteImageSlots(
   }
 
   // NOTE: explicit site↔image-slot assignments are not persisted yet (see
-  // docs/KNOWN_ISSUES.md). Slots currently derive from published project images.
+  // docs/reports/DIAGNOSIS.md, D-04). Slots currently derive from published
+  // project images.
 
   return slots
 }

@@ -1,5 +1,6 @@
 import {
   createSiteRecord,
+  countPublishedSitesForOwner as countPublishedSitesForOwnerRecord,
   findSiteById,
   findSitesByTenantId,
   findSiteByTenantAndSlug,
@@ -70,4 +71,9 @@ export async function getSitesByTenant(tenantId: string) {
 
 export async function getSiteByTenantAndSlug(tenantId: string, slug: string) {
   return findSiteByTenantAndSlug(tenantId, slug)
+}
+
+/** Owner console: count published sites across all tenants. */
+export async function countPublishedSitesForOwner() {
+  return countPublishedSitesForOwnerRecord()
 }

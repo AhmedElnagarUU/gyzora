@@ -1,7 +1,12 @@
 import { Tenant } from '@/features/tenants/model'
 import { Site } from '@/features/sites/model'
 import { createTenantSchema } from '@/features/tenants/schema'
-import { findTenantById, findTenantBySlug } from '@/features/tenants/repository'
+import {
+  findAllTenantsForOwner,
+  findTenantById,
+  findTenantBySlug,
+  updateTenantStatusById,
+} from '@/features/tenants/repository'
 import { z } from 'zod'
 
 interface CreateTenantWithSiteResult {
@@ -47,3 +52,21 @@ export async function createTenantWithSite(
 }
 
 export { findTenantById, findTenantBySlug }
+
+/** Owner console: list every tenant. */
+export async function listTenantsForOwner() {
+  return findAllTenantsForOwner()
+}
+
+/** Owner console: read a single tenant by id. */
+export async function getTenantByIdForOwner(id: string) {
+  return findTenantById(id)
+}
+
+/** Owner console: activate/suspend a tenant. */
+export async function setTenantStatusForOwner(
+  id: string,
+  status: 'ACTIVE' | 'SUSPENDED'
+) {
+  return updateTenantStatusById(id, status)
+}

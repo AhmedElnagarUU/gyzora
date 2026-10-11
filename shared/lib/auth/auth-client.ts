@@ -2,6 +2,7 @@ import { betterAuth } from 'better-auth'
 import { mongodbAdapter } from '@better-auth/mongo-adapter'
 import mongoose from 'mongoose'
 import { connectToDatabase } from '@/shared/lib/db/mongoose'
+import { getEnv } from '@/shared/lib/env'
 
 function buildAuth(db: Parameters<typeof mongodbAdapter>[0]) {
   return betterAuth({
@@ -58,7 +59,7 @@ function buildAuth(db: Parameters<typeof mongodbAdapter>[0]) {
     },
 
     appName: 'Gzora',
-    baseURL: process.env.BETTER_AUTH_URL || 'http://localhost:3000',
+    baseURL: getEnv().BETTER_AUTH_URL,
   })
 }
 

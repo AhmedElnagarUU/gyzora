@@ -71,7 +71,16 @@ export async function updateProjectRecord(
   ).lean()
 }
 
-export async function deleteProject(id: string, tenantId: string) {
+export async function deleteProjectByIdAndTenant(id: string, tenantId: string) {
   await connectToDatabase()
   return Project.deleteOne({ _id: id, tenantId: tenantId as any })
+}
+
+/**
+ * Owner-named cross-tenant count of published projects (platform analytics).
+ * See CODE_RULES §5 — owner access never bypasses the filter implicitly.
+ */
+export async function countPublishedProjectsForOwner() {
+  await connectToDatabase()
+  return Project.countDocuments({ status: 'PUBLISHED' })
 }

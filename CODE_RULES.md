@@ -9,7 +9,7 @@ gzora/
 │   ├── (marketing)/
 │   ├── (dashboard)/
 │   ├── (owner)/
-│   ├── s/[tenantSlug]/       # Public tenant sites
+│   ├── s/[slug]/            # Public published sites (render snapshot only)
 │   └── api/
 ├── features/
 │   └── projects/             # one folder per feature
@@ -23,11 +23,10 @@ gzora/
 │       └── types.ts
 ├── shared/                   # Used by 2+ features only
 │   ├── ui/                   # Button, Input, Modal...
-│   ├── lib/                  # auth, db connection, s3, tenant, env
-│   └── i18n/
-├── templates/
-├── docs/
-└── public/
+│   ├── lib/                  # auth, db connection, s3, env, images
+│   └── i18n/                 # locale helpers, direction, fallback
+├── docs/                     # evidence-based project documentation (see AGENTS.md)
+└── public/                   # static assets incl. bundled template imagery
 
 Rules:
 - A feature never imports another feature's model.ts or repository.ts. It calls the other feature's service.ts.
@@ -123,3 +122,53 @@ UI → api-client → route.ts → handlers → service → repository → model
 | Skip validation | Zod in schema.ts |
 | Use any | unknown + narrowing |
 | Pages Router / getServerSideProps | App Router + Server Components |
+
+## 13. Localization (see `docs/project/LOCALIZATION.md`)
+
+- All customer-editable text is `LocalizedText = { en: string; ar: string }`;
+  language is modeled explicitly, never inferred from text direction.
+- Fallback resolution (`requested → en → omit`) lives once in `shared/i18n`
+  (`resolveLocalized`) — do not re-implement per feature.
+- Dashboard locale: `locale` cookie (default `en`), next-intl without i18n
+  routing. Public locale: `Site.defaultLocale` + `?lang=en|ar`.
+- **No `[locale]` URL segment** (DEC-005).
+- RTL uses logical CSS utilities (`ms-*`/`me-*`/`ps-*`/`pe-*`,
+  `text-start`/`text-end`), never `ml/mr/left/right` for direction-sensitive
+  spacing.
+- UI strings live in `i18n/messages/{en,ar}.json`; every `en` key must exist in
+  `ar`. No hardcoded user-visible strings.
+
+## 14. Templates & content contract (see `docs/project/TEMPLATE_SYSTEM.md`)
+
+- Templates are **immutable code definitions** in `features/templates/` — never
+  a DB collection and never mutated by customer edits (DEC-002).
+- One `SiteContent` shape and one `SectionType` union for **all** templates; a
+  single `TemplateRenderer` renders any template.
+- Site creation deep-clones `template.defaultContent` (+ company input) —
+  `cloneTemplateContent` is the only reader of default content.
+- Icons: `lucide-react` only. Images: `next/image`; failed loads degrade to a
+  styled placeholder; alt text required.
+- Imagery priority: uploads > optional Pexels > bundled fallbacks. Pexels is
+  server-only, optional, and never a dependency of creation/rendering (DEC-006).
+  Do not label illustrative imagery as a customer project.
+
+## 15. Publishing & drafts (see DEC-004)
+
+- `Site.content` = **draft**, editable anytime (before or after publishing).
+- `Site.published` = immutable snapshot written only by the publish operation
+  (`{ content, template, theme, defaultLocale, projects[], version, publishedAt }`).
+- Public routes render **only** `Site.published`, and only when
+  `status === 'PUBLISHED'`. Draft never leaks to the public site.
+- Publish validates server-side; on failure nothing is written (no false
+  success) and the response reports failure (422 on validation).
+- Publish/unpublish invalidate public caches (`revalidatePath`).
+- Preview renders draft content on an owner-only route with `no-store`.
+
+## 16. Environment & secrets (see DEC-008)
+
+- Server env validated once by `shared/lib/env.ts` (Zod); client code reads only
+  `NEXT_PUBLIC_*`.
+- `PEXELS_API_KEY` and other optional integrations must be modeled as optional —
+  the app must run without them.
+- Never commit `.env`; keep `.env.example` in sync. Never print/echo `.env`
+  values.

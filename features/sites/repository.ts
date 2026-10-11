@@ -36,6 +36,12 @@ export async function findPublishedSiteBySlug(slug: string) {
   }).lean()
 }
 
+/** Owner console: count published sites across all tenants. */
+export async function countPublishedSitesForOwner() {
+  await connectToDatabase()
+  return Site.countDocuments({ status: 'PUBLISHED' })
+}
+
 export async function updateSiteByIdAndTenant(
   id: string,
   tenantId: string,

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { requireSession } from '@/shared/lib/auth/session'
 import { findSiteByTenantAndSlug } from '@/features/sites/repository'
 import { createSite, updateSite } from '@/features/sites/service'
-import { createSiteSchema } from '@/features/sites/schema'
+import { createSiteSchema, updateSiteSchema } from '@/features/sites/schema'
 import { getSitesByTenant } from '@/features/sites/service'
 
 function errorStatus(message: string): number {
@@ -12,9 +12,21 @@ function errorStatus(message: string): number {
   return 500
 }
 
+/**
+ * Require a session AND a resolved tenant. Site operations are tenant-scoped,
+ * so a session without a bound tenant cannot be served.
+ */
+async function requireTenantContext(req: NextRequest) {
+  const ctx = await requireSession(req.headers)
+  if (!ctx.tenantId) {
+    throw new Error('FORBIDDEN')
+  }
+  return ctx
+}
+
 export async function GET(req: NextRequest) {
   try {
-    const ctx = await requireSession(req.headers)
+    const ctx = await requireTenantContext(req)
     const { searchParams } = new URL(req.url)
     const slug = searchParams.get('slug')
 
@@ -42,7 +54,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const ctx = await requireSession(req.headers)
+    const ctx = await requireTenantContext(req)
     const body: unknown = await req.json().catch(() => ({}))
     const result = createSiteSchema.safeParse(body)
 
@@ -66,17 +78,18 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
   try {
-    const ctx = await requireSession(req.headers)
+    const ctx = await requireTenantContext(req)
     const body: unknown = await req.json().catch(() => ({}))
-    const { id, ...input } = (body ?? {}) as Record<string, unknown>
+    const result = updateSiteSchema.safeParse(body)
 
-    if (typeof id !== 'string' || !id) {
+    if (!result.success) {
       return NextResponse.json(
-        { success: false, error: 'Site id is required' },
+        { success: false, error: result.error.issues[0]?.message || 'Invalid input' },
         { status: 400 }
       )
     }
 
+    const { id, ...input } = result.data
     const site = await updateSite(id, ctx.tenantId, input)
     if (!site) {
       return NextResponse.json(

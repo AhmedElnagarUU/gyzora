@@ -1,4 +1,5 @@
 import { S3 } from 'aws-sdk'
+import { getEnv } from '@/shared/lib/env'
 
 /**
  * The S3 client is built lazily on first use so that importing this module
@@ -10,11 +11,14 @@ let s3Instance: S3 | null = null
 function getS3(): S3 {
   if (s3Instance) return s3Instance
 
-  const region = process.env.S3_REGION
-  const accessKeyId = process.env.S3_ACCESS_KEY_ID
-  const secretAccessKey = process.env.S3_SECRET_ACCESS_KEY
+  const {
+    S3_BUCKET: bucket,
+    S3_REGION: region,
+    S3_ACCESS_KEY_ID: accessKeyId,
+    S3_SECRET_ACCESS_KEY: secretAccessKey,
+  } = getEnv()
 
-  if (!process.env.S3_BUCKET || !region || !accessKeyId || !secretAccessKey) {
+  if (!bucket || !region || !accessKeyId || !secretAccessKey) {
     throw new Error('S3 environment variables are not configured')
   }
 
@@ -39,7 +43,7 @@ export function getPresignedUploadUrl(
   const fullKey = `tenants/${tenantId}/${key}`
 
   return getS3().getSignedUrl('putObject', {
-    Bucket: process.env.S3_BUCKET,
+    Bucket: getEnv().S3_BUCKET,
     Key: fullKey,
     ContentType: contentType,
     ACL: 'public-read',
@@ -51,11 +55,12 @@ export function getPresignedUploadUrl(
  * Generate the public URL for a stored S3 object.
  */
 export function getPublicUrl(key: string): string {
-  const publicBaseUrl = process.env.S3_PUBLIC_BASE_URL
+  const { S3_PUBLIC_BASE_URL: publicBaseUrl, S3_BUCKET: bucket, S3_REGION: region } =
+    getEnv()
   if (publicBaseUrl) {
     return `${publicBaseUrl}/${key}`
   }
-  return `https://${process.env.S3_BUCKET}.s3.${process.env.S3_REGION}.amazonaws.com/${key}`
+  return `https://${bucket}.s3.${region}.amazonaws.com/${key}`
 }
 
 /**

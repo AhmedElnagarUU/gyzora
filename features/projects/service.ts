@@ -1,6 +1,8 @@
 import { createProjectSchema } from '@/features/projects/schema'
 import {
+  countPublishedProjectsForOwner as countPublishedProjectsForOwnerRecord,
   createProjectRecord,
+  deleteProjectByIdAndTenant,
   findProjectsByTenant,
   findProjectByIdAndTenant,
   updateProjectRecord,
@@ -41,4 +43,13 @@ export async function updateProject(
 ) {
   const { id: _id, ...rest } = input
   return updateProjectRecord(id, tenantId, rest)
+}
+
+export async function deleteProject(id: string, tenantId: string) {
+  return deleteProjectByIdAndTenant(id, tenantId)
+}
+
+/** Owner-named cross-tenant count for the platform analytics console. */
+export async function countPublishedProjectsForOwner() {
+  return countPublishedProjectsForOwnerRecord()
 }

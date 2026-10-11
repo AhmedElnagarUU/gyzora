@@ -32,8 +32,8 @@ export default function TrackingSettingsPage() {
     try {
       const res = await fetch('/api/tracking')
       if (!res.ok) throw new Error('Failed to load')
-      const data = await res.json()
-      setConfig(data)
+      const result = await res.json()
+      setConfig(result.data)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load')
     } finally {

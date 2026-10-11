@@ -23,8 +23,8 @@ export function useSessionClient(): {
     fetch('/api/auth/session', { credentials: 'include' })
       .then((res) => res.json())
       .then((json) => {
-        if (json?.user) {
-          setData({ user: json.user })
+        if (json?.data?.user) {
+          setData({ user: json.data.user })
         } else {
           setData(null)
         }
