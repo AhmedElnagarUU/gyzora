@@ -16,10 +16,10 @@ same change as the work it describes, with real evidence — never intent
 ## Current state
 
 - **Phase:** Phase A (stabilize) — **complete** (M-001, M-002 → EPIC-001 done).
-  Phase T (templates) — **in progress** (M-013, M-014, M-015 Done; M-016 next).
-- **First actionable milestone:** **`MILESTONE-016`** (EPIC-006; depends on
-  M-013/M-014 — both Done). M-003, M-004, M-005, M-008 are also unblocked
-  (parallelization per `DEPENDENCY_MAP.md` §4).
+  Phase T (templates) — **in progress** (M-013 → M-016 all Done; M-017 next).
+- **First actionable milestone:** **`MILESTONE-017`** (EPIC-006; depends on
+  M-013/M-014/M-015/M-016 — all Done). M-003, M-004, M-005, M-008 are also
+  unblocked (parallelization per `DEPENDENCY_MAP.md` §4).
 - **Baseline commands (pre-recovery, verified):** `typecheck` pass, `lint` pass
   (0 errors/44 warnings), `build` pass. No test framework.
 - **Post-M-001/M-002 (verified 2026-10-11):** `typecheck` pass; `lint` 0 errors/30
@@ -44,6 +44,14 @@ same change as the work it describes, with real evidence — never intent
   4-step rendering; projects grid/detail; AR `dir="rtl"` + Arabic copy; no
   placeholder copy) via a temporary dev-server check page, then removed. See
   `MILESTONE-015`.
+- **Post-M-016 (verified 2026-10-12):** `typecheck` pass; `lint` 0/28; `build`
+  pass — 31 routes; 48/48 runtime checks true (all six construction pages
+  render via the shared renderer; process leads the capabilities block on
+  Home; industrial identity — dark `#0f1117`, orange `#ea580c`, yellow
+  `#facc15`, Impact headings — distinct from real estate; old `#3b82f6` +
+  any teal/serif absent; 4-step process; projects grid/detail; AR
+  `dir="rtl"` + Arabic copy; no placeholders, no `ISO`/`certified`/counts)
+  via a temporary dev-server check page, then removed. See `MILESTONE-016`.
 - **Blocked:** authenticated-endpoint runtime verification requires a usable
   MongoDB session (`U-01`); resolves with `MILESTONE-025`. Unauth endpoint
   behavior was exercised (401 envelopes; see BASELINE.md).
@@ -67,7 +75,7 @@ same change as the work it describes, with real evidence — never intent
 | M-013 | Template Content Schema, Section Contract & Default Content | 006 | M-001, M-002 | **Done** | Lead Eng. Agent | Full `TemplateDefinition`/`SiteContent`/`SectionType` contract + registry + bilingual defaults + `cloneTemplateContent`; typecheck pass; lint 0/30; build pass; 24/24 runtime checks (`docs/milestones/EPIC-006/MILESTONE-013.md`) |
 | M-014 | Shared Renderer & Section Library | 006 | M-013 | **Done** | Lead Eng. Agent | `TemplateRenderer` (Server Component) + 12 section components, `ImageWithFallback`, `themeCssVars`, `ProjectView`; typecheck pass; lint 0/28; build pass; 23/23 runtime SSR checks; `/s/[slug]` call-site updated (`docs/milestones/EPIC-006/MILESTONE-014.md`) |
 | M-015 | Real Estate Template | 006 | M-013, M-014 | **Done** | Lead Eng. Agent | Premium light identity (teal/gold/stone + Cormorant serif) distinct from construction; `process` added to Home (8 sections); typecheck pass; lint 0/28; build pass; 40/40 runtime SSR checks; all six pages render (`docs/milestones/EPIC-006/MILESTONE-015.md`) |
-| M-016 | Construction Template | 006 | M-013, M-014 | Not Started | — | — |
+| M-016 | Construction Template | 006 | M-013, M-014 | **Done** | Lead Eng. Agent | Industrial identity (dark `#0f1117`, orange `#ea580c`, yellow `#facc15`, Impact headings); process leads capabilities on Home; typecheck pass; lint 0/28; build pass; 48/48 runtime SSR checks; all six pages render (`docs/milestones/EPIC-006/MILESTONE-016.md`) |
 | M-017 | Template Imagery & Optional Pexels | 006 | M-013, M-014, M-015, M-016 | Not Started | — | — |
 | M-018 | next-intl Wiring, Locale Direction & Fallback | 007 | M-014, M-015, M-016 | Not Started | — | — |
 | M-019 | Dashboard Localization & RTL | 007 | M-018 | Not Started | — | — |
@@ -83,8 +91,10 @@ same change as the work it describes, with real evidence — never intent
 
 ## Ready queue (all prerequisites Done)
 
-1. `MILESTONE-016` — Construction Template (EPIC-006; M-013 + M-014 Done —
-   real-estate M-015 precedent). Critical path next.
+1. `MILESTONE-017` — Template Imagery & Optional Pexels (EPIC-006; depends on
+   M-013, M-014, M-015, M-016 — all Done). Critical path next. Ships the
+   bundled fallback imagery both templates reference (imagery refs were
+   deliberately deferred from M-015/M-016 to land together with the files).
 2. `MILESTONE-003` — Site Ownership & One-Site-Per-User (EPIC-002; M-001 + M-013
    Done) — parallel track 1 (domain).
 3. `MILESTONE-004` — Bilingual Site Content & Published Snapshot Schema
@@ -92,10 +102,9 @@ same change as the work it describes, with real evidence — never intent
 4. `MILESTONE-005` — Project↔Site Linkage & Bilingual Project Schema (EPIC-002;
    M-001 + M-013 Done) — parallel track 1.
 
-Per `DEPENDENCY_MAP.md` §4, after M-015 the critical path is
+Per `DEPENDENCY_MAP.md` §4, after M-016 the critical path is
 `M-013 → M-014 → M-015 → M-016 → M-017 → M-018 → …`; the domain track
-(M-003/004/005 → M-006) can run in parallel when resourcing allows. `MILESTONE-017`
-unblocks once M-015 + M-016 are both Done.
+(M-003/004/005 → M-006) can run in parallel when resourcing allows.
 
 ## Review findings (from M-001 independent review — not yet scheduled)
 

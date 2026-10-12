@@ -4,7 +4,11 @@ import type { TemplateDefinition } from '../../types'
 
 /**
  * `construction` template definition — immutable, code-resident (DEC-002).
- * Identity: sturdy, industrial, capability-forward (TEMPLATE_SYSTEM §9).
+ * Identity (M-016): sturdy, industrial, capability-forward — dark charcoal
+ * base with a burnt-orange primary (`#ea580c`) and high-vis yellow accent
+ * (`#facc15`), bold heavy heading stack (Impact/Arial Black). Clearly
+ * distinct from the real-estate template's light teal+serif
+ * (TEMPLATE_SYSTEM §9).
  */
 export const constructionTemplate: TemplateDefinition = {
   id: 'construction',
@@ -20,17 +24,17 @@ export const constructionTemplate: TemplateDefinition = {
     id: 'dark',
     mode: 'dark',
     colors: {
-      primary: '#3b82f6',
+      primary: '#ea580c',
       secondary: '#9ca3af',
-      accent: '#a78bfa',
+      accent: '#facc15',
       background: '#0f1117',
       foreground: '#f3f4f6',
-      card: '#1a1a2e',
+      card: '#181d27',
       border: '#374151',
     },
     fonts: {
       sans: 'Inter, system-ui, sans-serif',
-      heading: 'Inter, system-ui, sans-serif',
+      heading: 'Impact, "Arial Black", sans-serif',
     },
   },
   imageSlots: [

@@ -45,7 +45,7 @@ the product depends on.
 | MILESTONE-013 | Template Content Schema, Section Contract & Default Content | M-001, M-002 | **Done** (2026-10-11) |
 | MILESTONE-014 | Shared Renderer & Section Library | M-013 | **Done** (2026-10-12) |
 | MILESTONE-015 | Real Estate Template | M-013, M-014 | **Done** (2026-10-12) |
-| MILESTONE-016 | Construction Template | M-013, M-014 | Not Started |
+| MILESTONE-016 | Construction Template | M-013, M-014 | **Done** (2026-10-12) |
 | MILESTONE-017 | Template Imagery & Optional Pexels | M-013, M-014, M-015, M-016 | Not Started |
 
 ## 7. Dependencies
@@ -63,8 +63,9 @@ the product depends on.
 - [x] *Real Estate* renders Home/About/Services/Projects/Project Details/Contact
       *(M-015 — all six pages verified via the shared renderer; 8 sections on
       Home incl. `process`).*
-- [ ] *Construction* renders Home/About/Services/Projects/Project Details/Contact
-      *(M-016).*
+- [x] *Construction* renders Home/About/Services/Projects/Project Details/Contact
+      *(M-016 — all six pages verified via the shared renderer; process leads
+      the capabilities block on Home; industrial identity).*
       as complete, responsive experiences.
 - [ ] Imagery uses bundled fallbacks; Pexels is optional and never a dependency.
 - [ ] `lucide-react` icons only; `next/image` with sane fallbacks.
