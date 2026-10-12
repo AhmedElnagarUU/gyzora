@@ -59,6 +59,14 @@ export const defaultRealEstateContent = {
       en: 'A property journey where every client feels informed and supported.',
       ar: 'رحلة عقارية يشعر فيها كل عميل بأنه على اطلاع كامل ويتلقى الدعم في كل خطوة.',
     },
+    image: {
+      url: '/templates/real-estate/about.jpg',
+      alt: {
+        en: 'Spacious modern living room',
+        ar: 'غرفة معيشة عصرية واسعة',
+      },
+      source: 'bundled',
+    },
   },
   services: [
     {
@@ -69,6 +77,11 @@ export const defaultRealEstateContent = {
         en: 'Assistance finding apartments, villas, and houses that match your budget and lifestyle.',
         ar: 'مساعدة في إيجاد الشقق والفلل والمنازل التي تناسب ميزانيتك وأسلوب حياتك.',
       },
+      image: {
+        url: '/templates/real-estate/service-residential.jpg',
+        alt: { en: 'Modern family home for sale', ar: 'منزل عائلي عصري للبيع' },
+        source: 'bundled',
+      },
     },
     {
       id: 'rentals',
@@ -77,6 +90,11 @@ export const defaultRealEstateContent = {
       description: {
         en: 'Support for leasing residential and commercial properties with clear terms.',
         ar: 'دعم لتأجير العقارات السكنية والتجارية بشروط واضحة.',
+      },
+      image: {
+        url: '/templates/real-estate/service-rentals.jpg',
+        alt: { en: 'Suburban home available for rent', ar: 'منزل في الضواحي متاح للإيجار' },
+        source: 'bundled',
       },
     },
     {
@@ -87,6 +105,11 @@ export const defaultRealEstateContent = {
         en: 'Guidance for offices, shops, and other commercial premises.',
         ar: 'إرشاد للمكاتب والمحلات والمساحات التجارية الأخرى.',
       },
+      image: {
+        url: '/templates/real-estate/service-commercial.jpg',
+        alt: { en: 'Modern glass office tower', ar: 'برج مكاتب زجاجي حديث' },
+        source: 'bundled',
+      },
     },
     {
       id: 'valuation',
@@ -95,6 +118,11 @@ export const defaultRealEstateContent = {
       description: {
         en: 'Assessments that help you understand a property’s value before you decide.',
         ar: 'تقييمات تساعدك على فهم قيمة العقار قبل اتخاذ القرار.',
+      },
+      image: {
+        url: '/templates/real-estate/service-valuation.jpg',
+        alt: { en: 'Documents and charts used for property evaluation', ar: 'مستندات ورسوم بيانية لتقييم العقار' },
+        source: 'bundled',
       },
     },
   ],
@@ -175,7 +203,29 @@ export const defaultRealEstateContent = {
     },
   ],
   contact: {},
-  images: {},
+  images: {
+    hero: {
+      url: '/templates/real-estate/hero.jpg',
+      alt: {
+        en: 'Two-story house with illuminated windows at dusk',
+        ar: 'منزل من طابقين بنوافذ مضاءة عند الغسق',
+      },
+      source: 'bundled',
+    },
+    'hero-mobile': {
+      url: '/templates/real-estate/hero.jpg',
+      alt: {
+        en: 'Two-story house with illuminated windows at dusk',
+        ar: 'منزل من طابقين بنوافذ مضاءة عند الغسق',
+      },
+      source: 'bundled',
+    },
+    gallery: {
+      url: '/templates/real-estate/gallery.jpg',
+      alt: { en: 'Elegant kitchen with white cabinetry', ar: 'مطبخ أنيق بخزائن بيضاء' },
+      source: 'bundled',
+    },
+  },
 } satisfies SiteContent
 
 export const defaultConstructionContent = {
@@ -205,6 +255,14 @@ export const defaultConstructionContent = {
       en: 'Be the contractor clients trust to turn plans into finished spaces.',
       ar: 'أن نكون المقاول الذي يثق به العملاء لتحويل المخططات إلى مساحات مكتملة.',
     },
+    image: {
+      url: '/templates/construction/about.jpg',
+      alt: {
+        en: 'Construction blueprint with tools on a workbench',
+        ar: 'مخطط بناء مع أدوات على طاولة العمل',
+      },
+      source: 'bundled',
+    },
   },
   services: [
     {
@@ -215,6 +273,11 @@ export const defaultConstructionContent = {
         en: 'End-to-end construction for residential and commercial projects.',
         ar: 'بناء شامل للمشاريع السكنية والتجارية.',
       },
+      image: {
+        url: '/templates/construction/service-contracting.jpg',
+        alt: { en: 'Industrial plant under a clear sky', ar: 'منشأة صناعية تحت سماء صافية' },
+        source: 'bundled',
+      },
     },
     {
       id: 'fit-outs',
@@ -223,6 +286,11 @@ export const defaultConstructionContent = {
       description: {
         en: 'Interior finishes that bring a space to completion.',
         ar: 'تشطيبات داخلية تمنح المكان لمسة نهائية متكاملة.',
+      },
+      image: {
+        url: '/templates/construction/service-fitouts.jpg',
+        alt: { en: 'Modern interior fit-out with white cabinetry', ar: 'تشطيب داخلي عصري بخزائن بيضاء' },
+        source: 'bundled',
       },
     },
     {
@@ -233,6 +301,11 @@ export const defaultConstructionContent = {
         en: 'Planning, scheduling, and coordination from start to handover.',
         ar: 'تخطيط وجدولة وتنسيق من البداية حتى التسليم.',
       },
+      image: {
+        url: '/templates/construction/service-management.jpg',
+        alt: { en: 'Hand drawing technical designs on a blueprint', ar: 'يد ترسم تصاميم فنية على مخطط' },
+        source: 'bundled',
+      },
     },
     {
       id: 'maintenance',
@@ -241,6 +314,11 @@ export const defaultConstructionContent = {
       description: {
         en: 'Ongoing upkeep services to protect the work after handover.',
         ar: 'خدمات صيانة مستمرة للحفاظ على جودة العمل بعد التسليم.',
+      },
+      image: {
+        url: '/templates/construction/service-maintenance.jpg',
+        alt: { en: 'Workers leveling fresh cement on site', ar: 'عمال يسوّون الإسمنت الطازج في الموقع' },
+        source: 'bundled',
       },
     },
   ],
@@ -321,7 +399,16 @@ export const defaultConstructionContent = {
     },
   ],
   contact: {},
-  images: {},
+  images: {
+    hero: {
+      url: '/templates/construction/hero.jpg',
+      alt: {
+        en: 'Engineers in safety helmets reviewing construction plans on site',
+        ar: 'مهندسان بخوذات السلامة يراجعان مخططات البناء في الموقع',
+      },
+      source: 'bundled',
+    },
+  },
 } satisfies SiteContent
 
 /** Merge an optional partial localized overlay onto a base value. */

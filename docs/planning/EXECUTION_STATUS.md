@@ -16,10 +16,10 @@ same change as the work it describes, with real evidence — never intent
 ## Current state
 
 - **Phase:** Phase A (stabilize) — **complete** (M-001, M-002 → EPIC-001 done).
-  Phase T (templates) — **in progress** (M-013 → M-016 all Done; M-017 next).
-- **First actionable milestone:** **`MILESTONE-017`** (EPIC-006; depends on
-  M-013/M-014/M-015/M-016 — all Done). M-003, M-004, M-005, M-008 are also
-  unblocked (parallelization per `DEPENDENCY_MAP.md` §4).
+  Phase T (templates) — **in progress** (M-013 → M-017 all Done; M-018 next).
+- **First actionable milestone:** **`MILESTONE-018`** (EPIC-006; depends on
+  M-013/M-014 — Done; M-015/M-016/M-017 all Done). M-003, M-004, M-005, M-008
+  are also unblocked (parallelization per `DEPENDENCY_MAP.md` §4).
 - **Baseline commands (pre-recovery, verified):** `typecheck` pass, `lint` pass
   (0 errors/44 warnings), `build` pass. No test framework.
 - **Post-M-001/M-002 (verified 2026-10-11):** `typecheck` pass; `lint` 0 errors/30
@@ -52,6 +52,18 @@ same change as the work it describes, with real evidence — never intent
   any teal/serif absent; 4-step process; projects grid/detail; AR
   `dir="rtl"` + Arabic copy; no placeholders, no `ISO`/`certified`/counts)
   via a temporary dev-server check page, then removed. See `MILESTONE-016`.
+- **Post-M-017 (verified 2026-10-12):** `typecheck` pass; `lint` 0/28; `build`
+  pass — **32 routes** (adds `/api/images/search`); **13 bundled photos**
+  under `public/templates/{real-estate,construction}/` render via
+  `TemplateRenderer` (38/38 render checks; hero overlay active on the
+  real-estate default) + `public/templates/README.md` (license/photo IDs);
+  server-only `shared/lib/images/pexels.ts` passes **8/8 provider checks**
+  (no key ⇒ `[]`, success maps `{url,alt}` from `images.pexels.com`,
+  non-OK/timeout/network ⇒ `[]`, never throws); anonymous
+  `/api/images/search` ⇒ 401 envelope (tenant-gated, key never exposed;
+  authenticated + real-key path deferred — M-025/M-026). Bundled refs added
+  to both templates' default content (completes M-015/M-016 imagery
+  deferral). See `MILESTONE-017`.
 - **Blocked:** authenticated-endpoint runtime verification requires a usable
   MongoDB session (`U-01`); resolves with `MILESTONE-025`. Unauth endpoint
   behavior was exercised (401 envelopes; see BASELINE.md).
@@ -76,7 +88,7 @@ same change as the work it describes, with real evidence — never intent
 | M-014 | Shared Renderer & Section Library | 006 | M-013 | **Done** | Lead Eng. Agent | `TemplateRenderer` (Server Component) + 12 section components, `ImageWithFallback`, `themeCssVars`, `ProjectView`; typecheck pass; lint 0/28; build pass; 23/23 runtime SSR checks; `/s/[slug]` call-site updated (`docs/milestones/EPIC-006/MILESTONE-014.md`) |
 | M-015 | Real Estate Template | 006 | M-013, M-014 | **Done** | Lead Eng. Agent | Premium light identity (teal/gold/stone + Cormorant serif) distinct from construction; `process` added to Home (8 sections); typecheck pass; lint 0/28; build pass; 40/40 runtime SSR checks; all six pages render (`docs/milestones/EPIC-006/MILESTONE-015.md`) |
 | M-016 | Construction Template | 006 | M-013, M-014 | **Done** | Lead Eng. Agent | Industrial identity (dark `#0f1117`, orange `#ea580c`, yellow `#facc15`, Impact headings); process leads capabilities on Home; typecheck pass; lint 0/28; build pass; 48/48 runtime SSR checks; all six pages render (`docs/milestones/EPIC-006/MILESTONE-016.md`) |
-| M-017 | Template Imagery & Optional Pexels | 006 | M-013, M-014, M-015, M-016 | Not Started | — | — |
+| M-017 | Template Imagery & Optional Pexels | 006 | M-013, M-014, M-015, M-016 | **Done** | Lead Eng. Agent | 13 bundled license-free photos + README; server-only Pexels provider (no key ⇒ `[]`, never throws); `/api/images/search` thin route + handler (envelope, tenant-gated); `images.pexels.com` allowed; bundled refs wired into both templates' defaults; typecheck pass; lint 0/28; build pass (32 routes); 8/8 provider + 38/38 render/endpoint checks (`docs/milestones/EPIC-006/MILESTONE-017.md`) |
 | M-018 | next-intl Wiring, Locale Direction & Fallback | 007 | M-014, M-015, M-016 | Not Started | — | — |
 | M-019 | Dashboard Localization & RTL | 007 | M-018 | Not Started | — | — |
 | M-020 | Public Site Localization & Language Switching | 007 | M-018, M-023 | Not Started | — | — |
@@ -91,10 +103,10 @@ same change as the work it describes, with real evidence — never intent
 
 ## Ready queue (all prerequisites Done)
 
-1. `MILESTONE-017` — Template Imagery & Optional Pexels (EPIC-006; depends on
-   M-013, M-014, M-015, M-016 — all Done). Critical path next. Ships the
-   bundled fallback imagery both templates reference (imagery refs were
-   deliberately deferred from M-015/M-016 to land together with the files).
+1. `MILESTONE-018` — next-intl Wiring, Locale Direction & Fallback (EPIC-007;
+   depends on M-014, M-015, M-016 — all Done). Critical path next — replaces
+   the `resolveLocalized` temp shim in `features/templates/lib/text.ts` with
+   the shared i18n layer.
 2. `MILESTONE-003` — Site Ownership & One-Site-Per-User (EPIC-002; M-001 + M-013
    Done) — parallel track 1 (domain).
 3. `MILESTONE-004` — Bilingual Site Content & Published Snapshot Schema
@@ -102,7 +114,7 @@ same change as the work it describes, with real evidence — never intent
 4. `MILESTONE-005` — Project↔Site Linkage & Bilingual Project Schema (EPIC-002;
    M-001 + M-013 Done) — parallel track 1.
 
-Per `DEPENDENCY_MAP.md` §4, after M-016 the critical path is
+Per `DEPENDENCY_MAP.md` §4, after M-017 the critical path is
 `M-013 → M-014 → M-015 → M-016 → M-017 → M-018 → …`; the domain track
 (M-003/004/005 → M-006) can run in parallel when resourcing allows.
 
@@ -139,6 +151,8 @@ declared change set. They are tracked here rather than silently fixed.
 | 2026-10-11 | **M-002 Done** — `shared/lib/env.ts` (Zod, lazy, typed) reads through DB/auth/S3 bootstrap; `.env.example` synced; build verified without `.env`; 5/5 env smoke cases pass. **EPIC-001 complete** (M-001+M-002). Ready queue → M-013 | Lead Eng. Agent |
 | 2026-10-11 | **M-013 Done** — `features/templates` full contract (`TemplateDefinition`, `SiteContent`, `LocalizedText`, `ImageRef`, `SectionType`, `TemplatePage`, `TemplateTheme`), registry (`getTemplate`/`listTemplates`), Zod schemas, bilingual defaults, `cloneTemplateContent`, two definitions; typecheck/lint(0/30)/build pass; 24/24 runtime checks via temporary dev route. Ready queue → M-014 (+ M-003/004/005 parallel) | Lead Eng. Agent |
 | 2026-10-12 | **M-015 Done** — real-estate template identity: premium light palette (teal `#0f766e`/gold `#d97706`/stone + Cormorant serif headings) clearly distinct from construction; `process` added to Home composition (8 sections); default content verified (M-013 shape, sample-flagged, no fabricated facts); typecheck/lint(0/28)/build pass; 40/40 runtime SSR checks across the six pages (EN+AR). Ready queue → M-016 (+ M-003/004/005 parallel) | Lead Eng. Agent |
+| 2026-10-12 | **M-016 Done** — construction template identity: industrial dark palette (burnt orange `#ea580c`/high-vis yellow `#facc15`/Impact headings) clearly distinct from real estate; process leads the capabilities block on Home; default content verified (M-013 shape, sample-flagged, no fabrications); typecheck/lint(0/28)/build pass; 48/48 runtime SSR checks across the six pages (EN+AR). Ready queue → M-017 (+ M-003/004/005 parallel) | Lead Eng. Agent |
+| 2026-10-12 | **M-017 Done** — 13 bundled license-free photos under `public/templates/{real-estate,construction}/` + README (license/photo IDs); server-only `shared/lib/images/pexels.ts` (no key ⇒ `[]`, never throws — 8/8 provider checks); `GET /api/images/search` thin route + handler (zod, `requireSession`, envelope, key never exposed — 401 runtime check); `images.pexels.com` in `remotePatterns`; bundled refs wired into both templates' default content (completes M-015/M-016 imagery deferral); typecheck/lint(0/28)/build(32 routes) pass; 38/38 render checks. Ready queue → M-018 (+ M-003/004/005 parallel) | Lead Eng. Agent |
 
 ## How to update
 
