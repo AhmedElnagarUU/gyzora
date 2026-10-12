@@ -4,7 +4,10 @@ import type { TemplateDefinition } from '../../types'
 
 /**
  * `real-estate` template definition — immutable, code-resident (DEC-002).
- * Identity: premium, spacious, property-forward (TEMPLATE_SYSTEM §9).
+ * Identity (M-015): premium, spacious, property-forward — light palette of
+ * deep teal (`#0f766e`) and warm gold (`#d97706`) with elegant serif headings
+ * (Cormorant Garamond). Clearly distinct from the construction template's
+ * dark blue (TEMPLATE_SYSTEM §9).
  */
 export const realEstateTemplate: TemplateDefinition = {
   id: 'real-estate',
@@ -20,17 +23,17 @@ export const realEstateTemplate: TemplateDefinition = {
     id: 'light',
     mode: 'light',
     colors: {
-      primary: '#2563eb',
-      secondary: '#6b7280',
-      accent: '#8b5cf6',
+      primary: '#0f766e',
+      secondary: '#64748b',
+      accent: '#d97706',
       background: '#ffffff',
-      foreground: '#111827',
-      card: '#f9fafb',
-      border: '#e5e7eb',
+      foreground: '#1c1917',
+      card: '#fafaf9',
+      border: '#e7e5e4',
     },
     fonts: {
       sans: 'Inter, system-ui, sans-serif',
-      heading: 'Inter, system-ui, sans-serif',
+      heading: 'Cormorant Garamond, Georgia, serif',
     },
   },
   imageSlots: [
@@ -91,6 +94,7 @@ export const realEstateTemplate: TemplateDefinition = {
         'services',
         'features',
         'featured-projects',
+        'process',
         'cta',
         'contact',
       ],

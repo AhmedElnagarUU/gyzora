@@ -118,11 +118,13 @@ Phase G (publish + web)  M-023 → M-020 ; M-021 → M-022 ; M-024
 Phase H (verify + ship)  M-025, M-026, M-027 → M-028
 ```
 
-`MILESTONE-001`, `MILESTONE-002`, `MILESTONE-013`, and `MILESTONE-014` are
-**Done** (M-013 2026-10-11; M-014 2026-10-12 — the shared template content
-contract plus the single renderer and full section library).
-`MILESTONE-015` is the next actionable milestone (critical path); M-003, M-004,
-M-005, M-008, M-016 are also unblocked. Live status:
+`MILESTONE-001`, `MILESTONE-002`, `MILESTONE-013`, `MILESTONE-014`, and
+`MILESTONE-015` are **Done** (M-013/M-014 2026-10-11/12 — shared template
+content contract, single renderer and full section library; M-015 2026-10-12 —
+real-estate template identity: premium teal/gold/serif light theme distinct
+from construction, `process` on Home, all six pages verified).
+`MILESTONE-016` is the next actionable milestone (critical path); M-003, M-004,
+M-005, M-008 are also unblocked. Live status:
 `EXECUTION_STATUS.md`.
 
 ## MVP acceptance mapping
