@@ -163,3 +163,50 @@ template definition and the original clone untouched.
 - Avoid fabricated claims in defaults (FR-05).
 - *M-003 lists M-013 as a dependency only for shared type layout; ownership work
   does not otherwise need the content shape.
+
+### Handoff record
+
+| Field | Value |
+|---|---|
+| Milestone | MILESTONE-013 — Template Content Schema, Section Contract & Default Content |
+| Owner | Lead Engineering Agent |
+| Date | 2026-10-11 |
+| Status | **Done** |
+
+**Files changed**
+
+| Path | Change | Why |
+|---|---|---|
+| `features/templates/types.ts` | Rewritten | Full contract (`TemplateDefinition`, `SiteContent`, `LocalizedText`, `ImageRef`, `SectionType`, `TemplatePage`, `TemplateTheme`); kept `ImageSlotKey`/`ImageSlotDefinition`/`defaultTheme`/`imageSlots` for existing tooling |
+| `features/templates/index.ts` | Rewritten | `TEMPLATES` registry + `getTemplate`/`listTemplates` + re-exports (types, schemas, content, themes) |
+| `features/templates/content.ts` | **new** | Bilingual defaults for both templates + `cloneTemplateContent` |
+| `features/templates/schema.ts` | **new** | `siteContentSchema` + per-section schemas (shared with M-004) |
+| `features/templates/definitions/real-estate/definition.ts` | **new** | Full `real-estate` definition |
+| `features/templates/definitions/construction/definition.ts` | **new** | Full `construction` definition |
+| `app/s/[slug]/page.tsx` | Import fix | `TEMPLATES` imported from `@/features/templates` (registry) instead of the raw `types` module |
+
+**Deviations & decisions**
+
+- Removed the unused placeholder `SectionDefinition`/`sections[]` field; page
+  composition is now `pages[].sections`. `imageSlots` retained (configure UI
+  depends on it until EPIC-004).
+- `TemplateTheme` carries explicit color/font tokens on each definition
+  (self-contained immutable modules); `defaultTheme` kept as the legacy
+  theme-id mirror used by the configure page.
+- `images` slot schema is an explicit partial `z.object` — Zod 4's
+  `z.record(z.enum(...), …)` required every declared key.
+- Defaults contain **no** `stats` (would fabricate numbers) and use generic
+  category-appropriate copy per DEC-006/FR-05.
+- Intramodule imports inside `features/templates` use relative paths
+  (permitted; lint-clean) to keep the modules self-contained.
+
+**Known gaps / follow-ups**
+
+- Renderer/section components, unknown-section skipping, and theme token
+  application land in **M-014**. Editors and persistence consume this contract
+  in M-004/EPIC-004.
+- Permanent unit tests for schema/clone land under the M-025 Vitest harness;
+  the 24 runtime checks above are interim evidence.
+- `supportedLocales` fixed to `['en','ar']` (DEC-005).
+
+**Consumed by (next):** M-003, M-004, M-005, M-008, M-014, M-015, M-016.

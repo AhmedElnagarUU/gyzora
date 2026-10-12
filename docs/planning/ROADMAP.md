@@ -118,8 +118,10 @@ Phase G (publish + web)  M-023 → M-020 ; M-021 → M-022 ; M-024
 Phase H (verify + ship)  M-025, M-026, M-027 → M-028
 ```
 
-`MILESTONE-001` and `MILESTONE-002` are **Done** (2026-10-11; EPIC-001
-complete). `MILESTONE-013` is the next actionable milestone. Live status:
+`MILESTONE-001`, `MILESTONE-002`, and `MILESTONE-013` are **Done** (2026-10-11;
+EPIC-001 complete; M-013 ships the full template content contract).
+`MILESTONE-014` is the next actionable milestone (critical path); M-003, M-004,
+M-005, M-008, M-015, M-016 are also unblocked. Live status:
 `EXECUTION_STATUS.md`.
 
 ## MVP acceptance mapping
