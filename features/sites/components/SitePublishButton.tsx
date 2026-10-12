@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { updateSite } from '@/features/sites/api-client'
 
 export function SitePublishButton({
@@ -12,6 +13,8 @@ export function SitePublishButton({
   status: string
 }) {
   const router = useRouter()
+  const t = useTranslations('dashboard.sites')
+  const tCommon = useTranslations('common')
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const isPublished = status === 'PUBLISHED'
@@ -23,7 +26,7 @@ export function SitePublishButton({
       await updateSite(id, { status: isPublished ? 'DRAFT' : 'PUBLISHED' })
       router.refresh()
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update site')
+      setError(err instanceof Error ? err.message : t('errors.update'))
     } finally {
       setBusy(false)
     }
@@ -42,7 +45,7 @@ export function SitePublishButton({
             : 'rounded-lg bg-primary-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-primary-700 disabled:opacity-50'
         }
       >
-        {busy ? 'Saving...' : isPublished ? 'Unpublish' : 'Publish'}
+        {busy ? tCommon('saving') : isPublished ? t('unpublish') : t('publish')}
       </button>
     </div>
   )

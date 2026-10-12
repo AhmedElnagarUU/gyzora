@@ -44,7 +44,22 @@
   "templates": {
     "title": "Professional Templates for Your Industry",
     "subtitle": "Start with a template designed for your business type. Customize colors, fonts, and content to match your brand.",
-    "browseAll": "Browse All Templates"
+    "browseAll": "Browse All Templates",
+    "config": {
+      "title": "{name} — Configuration",
+      "subtitle": "Assign images from your media library to each slot.",
+      "savedPending": "Template configuration saved! (persistence pending)",
+      "loadingMedia": "Loading your media...",
+      "noMedia": "No images in your media library.",
+      "uploadHintBefore": "Upload images in the ",
+      "uploadHintLink": "Media Library",
+      "uploadHintAfter": " first.",
+      "save": "Save Configuration",
+      "noImage": "No image",
+      "change": "Change",
+      "selectImage": "Select Image",
+      "selectFor": "Select image for {label}"
+    }
   },
   "cta": {
     "title": "Ready to Build Your Professional Website?",
@@ -60,5 +75,338 @@
     "contact": "Contact",
     "privacy": "Privacy",
     "rights": "All rights reserved."
+  },
+  "common": {
+    "actions": "Actions",
+    "view": "View",
+    "edit": "Edit",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "close": "Close",
+    "save": "Save Settings",
+    "saving": "Saving...",
+    "creating": "Creating...",
+    "loading": "Loading...",
+    "noData": "No data",
+    "notAvailable": "—",
+    "backToProjects": "← Back to Projects",
+    "confirmDefault": "Are you sure?",
+    "requiredMarker": "*",
+    "table": {
+      "name": "Name",
+      "slug": "Slug",
+      "status": "Status",
+      "created": "Created",
+      "email": "Email"
+    },
+    "errors": {
+      "invalidInput": "Invalid input",
+      "generic": "An error occurred. Please try again.",
+      "unauthorized": "Authentication required",
+      "forbidden": "Owner access required",
+      "notFound": "Not found",
+      "slugTaken": "That slug is already in use",
+      "fetch": "Failed to fetch",
+      "load": "Failed to load"
+    }
+  },
+  "auth": {
+    "signIn": {
+      "metaTitle": "Sign In — Gzora",
+      "metaDescription": "Sign in to your Gzora account",
+      "title": "Welcome back",
+      "subtitle": "Sign in to your account to continue",
+      "submit": "Sign In",
+      "submitting": "Signing in...",
+      "noAccount": "Don't have an account?",
+      "signUpLink": "Sign up"
+    },
+    "signUp": {
+      "metaTitle": "Sign Up — Gzora",
+      "metaDescription": "Create your Gzora account",
+      "title": "Create your account",
+      "subtitle": "Start building your professional website today",
+      "submit": "Create Account",
+      "submitting": "Creating account...",
+      "passwordHint": "Must be at least 8 characters",
+      "hasAccount": "Already have an account?",
+      "signInLink": "Sign in"
+    },
+    "signOut": {
+      "submit": "Sign out"
+    },
+    "fields": {
+      "email": "Email address",
+      "password": "Password",
+      "fullName": "Full name"
+    },
+    "placeholders": {
+      "email": "you@example.com",
+      "password": "••••••••",
+      "fullName": "John Doe"
+    },
+    "validation": {
+      "nameRequired": "Name is required",
+      "emailInvalid": "Invalid email address",
+      "passwordMin": "Password must be at least 8 characters",
+      "passwordRequired": "Password is required"
+    }
+  },
+  "dashboard": {
+    "nav": {
+      "overview": "Overview",
+      "sites": "Sites",
+      "projects": "Projects",
+      "templates": "Templates",
+      "media": "Media",
+      "settings": "Settings",
+      "analytics": "Analytics",
+      "tenants": "Tenants",
+      "users": "Users"
+    },
+    "status": {
+      "published": "Published",
+      "draft": "Draft",
+      "archived": "Archived"
+    },
+    "themes": {
+      "names": {
+        "light": "Light",
+        "dark": "Dark",
+        "brand": "Brand"
+      },
+      "descriptions": {
+        "light": "Clean and bright with a neutral white background.",
+        "dark": "Sleek dark mode with deep backgrounds and high contrast.",
+        "brand": "Warm brand colors with amber and earth tones."
+      }
+    },
+    "templates": {
+      "title": "Template & Theme",
+      "subtitle": "Choose a template for your site and customize the theme.",
+      "previewLabel": "Template preview: {name}",
+      "imageSlots": "Image Slots",
+      "configure": "Configure Template",
+      "notFound": "Template not found.",
+      "back": "← Back to templates",
+      "names": {
+        "realEstate": "Real Estate",
+        "construction": "Construction",
+        "design": "Design"
+      },
+      "descriptions": {
+        "realEstate": "Modern template designed for real estate agencies. Showcases property listings with image galleries and contact forms.",
+        "construction": "Bold template built for construction and contracting businesses. Highlights projects with large hero images and portfolio grids.",
+        "design": "Template designed for design and interior businesses."
+      },
+      "slots": {
+        "logo": "Logo",
+        "hero": "Hero Image",
+        "heroMobile": "Hero Mobile",
+        "gallery": "Gallery",
+        "favicon": "Favicon"
+      }
+    },
+    "overview": {
+      "title": "Dashboard Overview",
+      "createSite": "Create Site",
+      "yourSites": "Your Sites",
+      "empty": "No sites found. Create your first site to get started.",
+      "slugPrefix": "Slug: ",
+      "stats": {
+        "totalSites": "Total Sites",
+        "published": "Published",
+        "drafts": "Drafts"
+      },
+      "errors": {
+        "loadSites": "Failed to load sites"
+      }
+    },
+    "sites": {
+      "title": "Sites",
+      "new": "New Site",
+      "empty": "No sites found. Create your first site.",
+      "publish": "Publish",
+      "unpublish": "Unpublish",
+      "create": {
+        "title": "Create New Site",
+        "subtitle": "Create a new site for your business",
+        "submit": "Create Site"
+      },
+      "fields": {
+        "name": "Site Name",
+        "slug": "Slug",
+        "template": "Template",
+        "theme": "Theme",
+        "status": "Status"
+      },
+      "placeholders": {
+        "name": "My Business Site",
+        "slug": "my-business-site"
+      },
+      "table": {
+        "name": "Name",
+        "slug": "Slug",
+        "template": "Template",
+        "theme": "Theme",
+        "status": "Status"
+      },
+      "errors": {
+        "load": "Failed to load sites",
+        "create": "Failed to create site",
+        "update": "Failed to update site"
+      }
+    },
+    "projects": {
+      "title": "Projects",
+      "subtitle": "Manage your project showcases",
+      "new": "New Project",
+      "newHeading": "New Project",
+      "newSubtitle": "Add a new project to your site",
+      "edit": "Edit Project",
+      "loading": "Loading projects...",
+      "empty": "No projects yet.",
+      "createFirst": "Create your first project",
+      "comingSoon": "Project creation form is coming soon.",
+      "orderPrefix": "Order: ",
+      "errors": {
+        "fetch": "Failed to fetch projects",
+        "load": "Failed to load",
+        "save": "Failed to save"
+      }
+    },
+    "media": {
+      "title": "Media Library",
+      "subtitle": "Manage images uploaded to your tenant's S3 storage",
+      "uploadTitle": "Upload Image",
+      "upload": "Upload",
+      "uploading": "Uploading...",
+      "limits": "Max size: 10MB. Allowed: PNG, JPEG, GIF, WebP",
+      "loading": "Loading media...",
+      "empty": "No media uploaded yet.",
+      "delete": "Delete",
+      "kbUnit": " KB",
+      "confirmDelete": "Delete this image? This cannot be undone.",
+      "errors": {
+        "load": "Failed to load media",
+        "s3Upload": "Upload to S3 failed",
+        "upload": "Upload failed",
+        "delete": "Delete failed"
+      }
+    },
+    "settings": {
+      "title": "Site Settings",
+      "subtitle": "Manage your site configuration and preferences",
+      "configuration": {
+        "title": "Site Configuration",
+        "description": "Update your site name, slug, and template settings."
+      },
+      "theme": {
+        "title": "Theme Preferences",
+        "description": "Switch between Light, Dark, and Brand themes."
+      },
+      "publishing": {
+        "title": "Publishing Options",
+        "description": "Manage draft/published status and CDN settings."
+      }
+    },
+    "tracking": {
+      "title": "Tracking & Analytics",
+      "subtitle": "Configure tracking pixels and analytics scripts for your published site.",
+      "addTracker": "Add Tracker",
+      "empty": "No trackers configured.",
+      "enabled": "Enabled",
+      "providers": {
+        "metaPixel": "Meta Pixel",
+        "googleAnalytics": "Google Analytics",
+        "custom": "Custom Script"
+      },
+      "placeholders": {
+        "name": "Display name",
+        "pixelId": "Pixel ID (e.g. GT-XXXXXXXXXX)",
+        "measurementId": "Measurement ID (e.g. G-XXXXXXXXXX)",
+        "scriptUrl": "Script URL"
+      },
+      "errors": {
+        "load": "Failed to load",
+        "save": "Failed to save"
+      }
+    },
+    "admin": {
+      "plans": {
+        "header": "Plan",
+        "free": "Free",
+        "pro": "Pro",
+        "enterprise": "Enterprise"
+      },
+      "statuses": {
+        "active": "Active",
+        "suspended": "Suspended",
+        "inactive": "Inactive"
+      },
+      "roles": {
+        "owner": "Owner",
+        "customer": "Customer"
+      },
+      "analytics": {
+        "title": "Platform Analytics",
+        "tenants": "Tenants",
+        "publishedSites": "Published Sites",
+        "publishedProjects": "Published Projects",
+        "byPlan": "Tenants by Plan",
+        "byStatus": "Tenants by Status",
+        "recentTenants": "Recently Created Tenants"
+      },
+      "tenants": {
+        "title": "Tenants",
+        "summary": "{tenants, plural, one {# tenant} other {# tenants}} • {users, plural, one {# user} other {# users}} total",
+        "suspend": "Suspend tenant",
+        "activate": "Activate tenant",
+        "errors": {
+          "action": "Action failed"
+        }
+      },
+      "users": {
+        "title": "Users",
+        "summary": "{count, plural, one {# user on Gzora} other {# users on Gzora}}",
+        "total": "{count, plural, one {# total} other {# total}}",
+        "role": "Role",
+        "tenant": "Tenant"
+      }
+    }
+  },
+  "projects": {
+    "editor": {
+      "defaultCategory": "General",
+      "update": "Update Project",
+      "create": "Create Project",
+      "fields": {
+        "title": "Title",
+        "slug": "Slug",
+        "category": "Category",
+        "status": "Status",
+        "order": "Order",
+        "description": "Description"
+      },
+      "placeholders": {
+        "title": "e.g. Modern Office Renovation",
+        "slug": "project-slug",
+        "category": "e.g. Commercial, Residential",
+        "description": "Project description...",
+        "seoTitle": "SEO title (optional)",
+        "seoDescription": "SEO description (optional)",
+        "keywords": "comma, separated, keywords"
+      },
+      "seo": {
+        "heading": "SEO Metadata",
+        "metaTitle": "Meta Title",
+        "metaDescription": "Meta Description",
+        "keywords": "Keywords"
+      },
+      "validation": {
+        "title": "Title is required",
+        "description": "Description is required"
+      }
+    }
   }
 }

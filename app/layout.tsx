@@ -1,9 +1,8 @@
 import { Inter } from 'next/font/google'
 import './globals.css'
 import type { Metadata } from 'next'
-import { NextIntlClientProvider } from 'next-intl'
 import { dirFor, getLocaleFromCookie } from '@/shared/i18n'
-import { loadMessages } from '@/i18n/config'
+import { LocaleProvider } from '@/shared/i18n/LocaleProvider'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -29,17 +28,16 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  // M-018: `<html lang dir>` + the next-intl provider follow the `locale`
-  // cookie (DEC-005 — no `[locale]` URL segment). `resolveLocalized` fallback
-  // and message catalogs are wired via `i18n/config.ts` / `shared/i18n`.
+  // M-018/M-019: `<html lang dir>` + the client `LocaleProvider` follow the
+  // `locale` cookie (DEC-005 — no `[locale]` URL segment). The provider holds
+  // the locale in client state so the switcher can change language without a
+  // reload, preserving unsaved form state.
   const locale = await getLocaleFromCookie()
 
   return (
     <html lang={locale} dir={dirFor(locale)}>
       <body className={`${inter.variable} font-sans antialiased`}>
-        <NextIntlClientProvider locale={locale} messages={loadMessages(locale)}>
-          {children}
-        </NextIntlClientProvider>
+        <LocaleProvider initialLocale={locale}>{children}</LocaleProvider>
       </body>
     </html>
   )

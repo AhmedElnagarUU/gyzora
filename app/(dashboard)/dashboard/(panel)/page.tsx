@@ -1,12 +1,15 @@
 import Link from 'next/link'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
+import { getTranslations } from 'next-intl/server'
 import { getTenantContext } from '@/shared/lib/auth/session'
 import { getSitesByTenant } from '@/features/sites/service'
 
 export const dynamic = 'force-dynamic'
 
 export default async function DashboardPage() {
+  const t = await getTranslations('dashboard.overview')
+  const tStatus = await getTranslations('dashboard.status')
   const ctx = await getTenantContext(await headers())
   if (!ctx) {
     redirect('/auth/signin')
@@ -17,27 +20,27 @@ export default async function DashboardPage() {
   try {
     sites = await getSitesByTenant(ctx.tenantId)
   } catch (err) {
-    error = err instanceof Error ? err.message : 'Failed to load sites'
+    error = err instanceof Error ? err.message : t('errors.loadSites')
   }
 
   const publishedSites = sites.filter((s) => s.status === 'PUBLISHED')
   const draftSites = sites.filter((s) => s.status === 'DRAFT')
 
   const stats = [
-    { label: 'Total Sites', value: sites.length },
-    { label: 'Published', value: publishedSites.length },
-    { label: 'Drafts', value: draftSites.length },
+    { label: t('stats.totalSites'), value: sites.length },
+    { label: t('stats.published'), value: publishedSites.length },
+    { label: t('stats.drafts'), value: draftSites.length },
   ]
 
   return (
     <>
       <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Dashboard Overview</h1>
+        <h1 className="text-2xl font-bold text-gray-900">{t('title')}</h1>
         <Link
           href="/dashboard/sites/new"
           className="inline-flex items-center justify-center rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700 transition-colors"
         >
-          Create Site
+          {t('createSite')}
         </Link>
       </div>
 
@@ -60,12 +63,10 @@ export default async function DashboardPage() {
 
       <div className="rounded-lg bg-white shadow-sm">
         <div className="border-b border-gray-200 px-6 py-4">
-          <h2 className="text-lg font-medium text-gray-900">Your Sites</h2>
+          <h2 className="text-lg font-medium text-gray-900">{t('yourSites')}</h2>
         </div>
         {sites.length === 0 ? (
-          <div className="p-6 text-center text-gray-500">
-            No sites found. Create your first site to get started.
-          </div>
+          <div className="p-6 text-center text-gray-500">{t('empty')}</div>
         ) : (
           <div className="divide-y divide-gray-200">
             {sites.map((site) => (
@@ -75,7 +76,7 @@ export default async function DashboardPage() {
               >
                 <div>
                   <p className="font-medium text-gray-900">{site.name}</p>
-                  <p className="text-sm text-gray-500">Slug: {site.slug}</p>
+                  <p className="text-sm text-gray-500">{t('slugPrefix')}{site.slug}</p>
                 </div>
                 <span
                   className={
@@ -84,7 +85,7 @@ export default async function DashboardPage() {
                       : 'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-yellow-100 text-yellow-800'
                   }
                 >
-                  {site.status}
+                  {site.status === 'PUBLISHED' ? tStatus('published') : site.status === 'DRAFT' ? tStatus('draft') : tStatus('archived')}
                 </span>
               </div>
             ))}

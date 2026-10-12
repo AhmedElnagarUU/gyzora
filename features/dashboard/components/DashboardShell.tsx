@@ -1,7 +1,8 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import SignOutButton from '@/features/auth/components/SignOutButton'
 import { useSessionClient } from '@/shared/lib/auth/session-client'
 import LanguageSwitcher from '@/shared/i18n/LanguageSwitcher'
@@ -12,33 +13,6 @@ interface NavItem {
   icon: React.ReactNode
   ownerOnly?: boolean
 }
-
-const navItems: NavItem[] = [
-  { href: '/dashboard', label: 'Overview', icon: '🏠' },
-  { href: '/dashboard/sites', label: 'Sites', icon: '🌐' },
-  { href: '/dashboard/projects', label: 'Projects', icon: '📁' },
-  { href: '/dashboard/templates', label: 'Templates', icon: '🎨' },
-  { href: '/dashboard/media', label: 'Media', icon: '🖼️' },
-  { href: '/dashboard/settings', label: 'Settings', icon: '⚙️' },
-  {
-    href: '/dashboard/admin/analytics',
-    label: 'Analytics',
-    icon: '📊',
-    ownerOnly: true,
-  },
-  {
-    href: '/dashboard/admin/tenants',
-    label: 'Tenants',
-    icon: '🏢',
-    ownerOnly: true,
-  },
-  {
-    href: '/dashboard/admin/users',
-    label: 'Users',
-    icon: '👥',
-    ownerOnly: true,
-  },
-]
 
 function NavLink({
   item,
@@ -69,6 +43,34 @@ function NavLink({
 export function DashboardShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const { data: session } = useSessionClient()
+  const t = useTranslations('dashboard.nav')
+
+  const navItems: NavItem[] = [
+    { href: '/dashboard', label: t('overview'), icon: '🏠' },
+    { href: '/dashboard/sites', label: t('sites'), icon: '🌐' },
+    { href: '/dashboard/projects', label: t('projects'), icon: '📁' },
+    { href: '/dashboard/templates', label: t('templates'), icon: '🎨' },
+    { href: '/dashboard/media', label: t('media'), icon: '🖼️' },
+    { href: '/dashboard/settings', label: t('settings'), icon: '⚙️' },
+    {
+      href: '/dashboard/admin/analytics',
+      label: t('analytics'),
+      icon: '📊',
+      ownerOnly: true,
+    },
+    {
+      href: '/dashboard/admin/tenants',
+      label: t('tenants'),
+      icon: '🏢',
+      ownerOnly: true,
+    },
+    {
+      href: '/dashboard/admin/users',
+      label: t('users'),
+      icon: '👥',
+      ownerOnly: true,
+    },
+  ]
 
   // Check if the current path is under a parent nav item (for nested routes)
   const isActive = (href: string): boolean => {

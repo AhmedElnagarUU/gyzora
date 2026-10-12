@@ -1,49 +1,22 @@
 import { cookies } from 'next/headers'
-import {
-  LOCALE_COOKIE,
-  defaultLocale,
-  isLocale,
-  locales,
-} from '@/i18n/config'
-import type { Locale } from '@/i18n/config'
+import { LOCALE_COOKIE, defaultLocale, isLocale } from '@/i18n/locales'
+import type { Locale } from '@/i18n/locales'
 
 /**
- * Shared localization substrate (M-018, LOCALIZATION.md §4/§5/§7).
+ * Shared localization surface (M-018/M-019, LOCALIZATION.md §4/§5/§7).
  *
- * - `resolveLocalized` — the single bilingual-text resolution used by
- *   template content everywhere: `ar` → `en` → empty string.
- * - `dirFor` / `getLocaleFromCookie` — drive the root `<html lang dir>` and
- *   `NextIntlClientProvider` from the `locale` cookie (DEC-005; no `[locale]`
- *   URL segment).
+ * - Pure helpers (`resolveLocalized`, `dirFor`, `isLocale`, `Locale`) are
+ *   re-exported from `shared/i18n/pure` — client-safe.
+ * - `getLocaleFromCookie` is **server-only** (imports `next/headers`) and
+ *   drives the root `<html lang dir>` + the locale handed to the provider.
  *
- * This module is server-only (imports `next/headers`). Client components that
- * need the locale use `document.documentElement.lang` (see
- * `shared/i18n/LanguageSwitcher.tsx`) or the next-intl provider.
+ * Client components should import from `@/shared/i18n/pure` (or use the
+ * `useLocale` hook from `@/shared/i18n/LocaleProvider`) to avoid pulling
+ * `next/headers` into the client bundle.
  */
 
-export { LOCALE_COOKIE, defaultLocale, locales }
-export type { Locale }
-
-/** Direction for a locale — `ar` is RTL, everything else LTR (§7). */
-export function dirFor(locale: Locale): 'ltr' | 'rtl' {
-  return locale === 'ar' ? 'rtl' : 'ltr'
-}
-
-/** Structural shape of bilingual customer content (en default, ar optional). */
-export interface LocalizedValue {
-  en?: string
-  ar?: string
-}
-
-/** `ar` → `en` → empty string (never `null`/`undefined`). */
-export function resolveLocalized(
-  value: LocalizedValue | null | undefined,
-  locale: Locale
-): string {
-  if (!value) return ''
-  if (locale === 'ar' && value.ar) return value.ar
-  return value.en ?? ''
-}
+export * from './pure'
+export { LOCALE_COOKIE, defaultLocale, locales } from '@/i18n/locales'
 
 /** Locale for the current request from the `locale` cookie (default `en`). */
 export async function getLocaleFromCookie(): Promise<Locale> {

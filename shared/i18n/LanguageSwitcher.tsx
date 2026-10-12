@@ -1,35 +1,32 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useLocale } from './LocaleProvider'
+import { LOCALE_COOKIE } from '@/i18n/locales'
 
 /**
  * Cookie-based language switch (DEC-005, LOCALIZATION.md §5).
  *
- * Sets the `locale` cookie (`i18n/config.ts` `LOCALE_COOKIE`) and reloads the
- * page so the root `<html lang dir>` and `NextIntlClientProvider` re-resolve.
- * A full reload is required because the switch must update `<html>` attributes,
- * which live outside the React tree. The reload keeps the current URL/query
- * state, so saved dashboard state is preserved.
+ * Writes the `locale` cookie, updates the client locale (via the
+ * `LocaleProvider` context → `<html lang dir>` follows imperatively), then
+ * `router.refresh()` re-renders the server components with the new cookie.
  *
- * The current locale is read from `document.documentElement.lang`, which the
- * root layout drives — no server props needed from the client boundary.
+ * No full page reload is used, so unsaved dashboard/editor form input is
+ * preserved (T04). `router.refresh` keeps all client component state while
+ * re-fetching the RSC tree.
  */
 
-const LOCALE_COOKIE = 'locale'
-
 export default function LanguageSwitcher() {
-  const [locale, setLocale] = useState<'en' | 'ar'>('en')
-
-  useEffect(() => {
-    setLocale(document.documentElement.lang === 'ar' ? 'ar' : 'en')
-  }, [])
+  const { locale, setLocale } = useLocale()
+  const router = useRouter()
 
   const target: 'en' | 'ar' = locale === 'en' ? 'ar' : 'en'
   const label = locale === 'en' ? 'العربية' : 'English'
 
   function switchLocale() {
     document.cookie = `${LOCALE_COOKIE}=${target}; path=/; max-age=31536000; samesite=lax`
-    window.location.reload()
+    setLocale(target)
+    router.refresh()
   }
 
   return (
