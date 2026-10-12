@@ -43,7 +43,7 @@ the product depends on.
 | ID | Title | Depends on | Status |
 |---|---|---|---|
 | MILESTONE-013 | Template Content Schema, Section Contract & Default Content | M-001, M-002 | **Done** (2026-10-11) |
-| MILESTONE-014 | Shared Renderer & Section Library | M-013 | Not Started |
+| MILESTONE-014 | Shared Renderer & Section Library | M-013 | **Done** (2026-10-12) |
 | MILESTONE-015 | Real Estate Template | M-013, M-014 | Not Started |
 | MILESTONE-016 | Construction Template | M-013, M-014 | Not Started |
 | MILESTONE-017 | Template Imagery & Optional Pexels | M-013, M-014, M-015, M-016 | Not Started |
@@ -58,8 +58,8 @@ the product depends on.
 ## 8. Definition of Done (epic)
 
 - [x] One `SiteContent` shape and one section contract used by both templates. *(M-013)*
-- [ ] A single `TemplateRenderer` renders both templates; unknown sections skip
-      safely; missing content degrades gracefully (no placeholder text).
+- [x] A single `TemplateRenderer` renders both templates; unknown sections skip
+      safely; missing content degrades gracefully (no placeholder text). *(M-014)*
 - [ ] Both templates render Home/About/Services/Projects/Project Details/Contact
       as complete, responsive experiences.
 - [ ] Imagery uses bundled fallbacks; Pexels is optional and never a dependency.

@@ -11,6 +11,22 @@ import type { z } from 'zod'
 
 export type Locale = 'en' | 'ar'
 
+/**
+ * A project as the renderer sees it. Projects live in their own collection
+ * (NOT in `SiteContent`); they are mapped to this view-model by the call site
+ * (TEMPLATE_SYSTEM §2, §4). Kept inside `features/templates` so the template
+ * feature stays self-contained (CODE_RULES §1 — no cross-feature model imports).
+ */
+export interface ProjectView {
+  id: string
+  slug: string
+  title: string
+  description: string
+  category?: string
+  coverImage?: string
+  gallery: string[]
+}
+
 /** Bilingual text. `en` is the default locale; `ar` may be empty in drafts. */
 export interface LocalizedText {
   en: string

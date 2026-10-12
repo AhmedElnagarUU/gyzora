@@ -4,6 +4,9 @@
  * Themes define color palettes and typography for a tenant's site.
  */
 
+import type { CSSProperties } from 'react'
+import type { TemplateTheme } from './types'
+
 export type ThemeColorMode = 'light' | 'dark' | 'brand'
 
 export interface ThemeColor {
@@ -134,4 +137,24 @@ export const getThemeClass = (mode: ThemeColorMode): string => {
   if (mode === 'dark') return 'dark'
   if (mode === 'brand') return 'brand'
   return 'light'
+}
+
+/**
+ * Map a template's `TemplateTheme` tokens (M-013 contract) onto CSS custom
+ * properties consumed by the renderer and sections. This is how theme tokens
+ * "visibly affect rendering" (M-014 AC-05) without a global stylesheet.
+ */
+export function themeCssVars(theme: TemplateTheme): CSSProperties {
+  const { colors, fonts } = theme
+  return {
+    '--tp-primary': colors.primary,
+    '--tp-secondary': colors.secondary,
+    '--tp-accent': colors.accent,
+    '--tp-background': colors.background,
+    '--tp-foreground': colors.foreground,
+    '--tp-card': colors.card,
+    '--tp-border': colors.border,
+    '--tp-font-sans': fonts.sans,
+    '--tp-font-heading': fonts.heading,
+  } as CSSProperties
 }

@@ -67,27 +67,40 @@ type ImageRef = { url: string; alt: LocalizedText;
   `project-grid`, `project-detail`).
 - Each section type has exactly one React component in
   `features/templates/sections/<Section>.tsx`.
-- A section component receives `({ section, content, projects, locale, theme })`
-  and is responsible only for presentation + fallback handling.
+- A section component receives `({ type, content, projects, locale, theme,
+  page, activeProjectSlug? })` (see `sections/types.ts`) and is responsible only
+  for presentation + fallback handling.
 - Unknown section types are skipped, not crashed on (forward compatibility).
+- Each section marks its own root with `data-section={type}`; a degraded (empty)
+  section returns `null` and leaves no marker.
 
 ## 4. TemplateRenderer
+
+- Server Component in `features/templates/components/TemplateRenderer.tsx`
+  (only `ImageWithFallback` is a client component — `TemplateDefinition` holds
+  Zod schema classes and must not cross a client boundary).
 
 ```
 <TemplateRenderer
    template={TemplateDefinition}
    content={SiteContent}          // draft OR published snapshot content
    projects={ProjectView[]}       // from snapshot on public, live on preview
-   locale={Locale}
-   theme={TemplateTheme}
+   locale={Locale}                // 'en' | 'ar', default 'en'
+   theme={TemplateTheme}          // defaults to template.theme
+   pageId={string?}               // template page id; default: home ('/')
+   activeProjectSlug={string?}    // for 'project-detail' sections
 />
 ```
 
 - **Single** renderer for all templates. No per-template renderer fork.
-- Renders only sections declared in `template.pages`, in order.
+- Renders only sections declared in the resolved `template.pages[].sections`, in
+  order; header/nav/footer chrome is derived from `template.pages` + content.
 - Missing optional content → section degrades gracefully or is omitted. Never
   render literal placeholder text (FR-04).
-- Images use `next/image`; on error, render a styled placeholder (FR-08).
+- Theme tokens are applied as `--tp-*` CSS custom properties on the renderer
+  root via `themeCssVars(theme)` and consumed by every section.
+- Images use `next/image` through `ImageWithFallback`; on error or empty src,
+  render a styled placeholder carrying the localized `alt` (FR-08).
 
 ## 5. Pages
 

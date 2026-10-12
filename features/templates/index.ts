@@ -48,6 +48,7 @@ export {
   THEMES,
   getTheme,
   getThemeClass,
+  themeCssVars,
   type ThemeDefinition,
   type ThemeColorMode,
 } from './theme'
@@ -71,4 +72,5 @@ export type {
   StatItem,
   ProcessStep,
   ContactContent,
+  ProjectView,
 } from './types'

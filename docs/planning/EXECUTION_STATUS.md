@@ -16,10 +16,10 @@ same change as the work it describes, with real evidence — never intent
 ## Current state
 
 - **Phase:** Phase A (stabilize) — **complete** (M-001, M-002 → EPIC-001 done).
-  Phase T (templates) — **in progress** (M-013 Done; M-014 next).
-- **First actionable milestone:** **`MILESTONE-014`** (EPIC-006; depends on
-  M-013 — Done). M-003, M-004, M-005, M-008, M-015, M-016 are also unblocked
-  (parallelization per `DEPENDENCY_MAP.md` §4).
+  Phase T (templates) — **in progress** (M-013, M-014 Done; M-015 next).
+- **First actionable milestone:** **`MILESTONE-015`** (EPIC-006; depends on
+  M-013/M-014 — both Done). M-003, M-004, M-005, M-008, M-016 are also
+  unblocked (parallelization per `DEPENDENCY_MAP.md` §4).
 - **Baseline commands (pre-recovery, verified):** `typecheck` pass, `lint` pass
   (0 errors/44 warnings), `build` pass. No test framework.
 - **Post-M-001/M-002 (verified 2026-10-11):** `typecheck` pass; `lint` 0 errors/30
@@ -29,6 +29,13 @@ same change as the work it describes, with real evidence — never intent
   pass — 31 routes; 24/24 runtime checks true (registry, six pages per template,
   bilingual/sample defaults, schema accept/reject, clone immutability) via a
   temporary dev-server check route, then removed. See `MILESTONE-013`.
+- **Post-M-014 (verified 2026-10-12):** `typecheck` pass; `lint` 0/28; `build`
+  pass — 31 routes; 23/23 runtime checks true (both templates' home pages,
+  all 12 `SectionType`s, unknown-section skip, empty-content omission, no
+  placeholder copy, theme tokens, image fallback, project pages, RTL) via a
+  temporary dev-server check page, then removed. Renderer + sections are
+  Server Components; only `ImageWithFallback` is a client component. See
+  `MILESTONE-014`.
 - **Blocked:** authenticated-endpoint runtime verification requires a usable
   MongoDB session (`U-01`); resolves with `MILESTONE-025`. Unauth endpoint
   behavior was exercised (401 envelopes; see BASELINE.md).
@@ -50,7 +57,7 @@ same change as the work it describes, with real evidence — never intent
 | M-011 | Project CRUD (bilingual) | 005 | M-005, M-008 | Not Started | — | — |
 | M-012 | Project Media / Cover / Ordering | 005 | M-011 | Not Started | — | — |
 | M-013 | Template Content Schema, Section Contract & Default Content | 006 | M-001, M-002 | **Done** | Lead Eng. Agent | Full `TemplateDefinition`/`SiteContent`/`SectionType` contract + registry + bilingual defaults + `cloneTemplateContent`; typecheck pass; lint 0/30; build pass; 24/24 runtime checks (`docs/milestones/EPIC-006/MILESTONE-013.md`) |
-| M-014 | Shared Renderer & Section Library | 006 | M-013 | Not Started | — | — |
+| M-014 | Shared Renderer & Section Library | 006 | M-013 | **Done** | Lead Eng. Agent | `TemplateRenderer` (Server Component) + 12 section components, `ImageWithFallback`, `themeCssVars`, `ProjectView`; typecheck pass; lint 0/28; build pass; 23/23 runtime SSR checks; `/s/[slug]` call-site updated (`docs/milestones/EPIC-006/MILESTONE-014.md`) |
 | M-015 | Real Estate Template | 006 | M-013, M-014 | Not Started | — | — |
 | M-016 | Construction Template | 006 | M-013, M-014 | Not Started | — | — |
 | M-017 | Template Imagery & Optional Pexels | 006 | M-013, M-014, M-015, M-016 | Not Started | — | — |
@@ -68,16 +75,18 @@ same change as the work it describes, with real evidence — never intent
 
 ## Ready queue (all prerequisites Done)
 
-1. `MILESTONE-014` — Shared Renderer & Section Library (EPIC-006; depends on
-   M-013 — Done). Critical path next.
-2. `MILESTONE-003` — Site Ownership & One-Site-Per-User (EPIC-002; M-001 + M-013
+1. `MILESTONE-015` — Real Estate Template (EPIC-006; depends on M-013 + M-014 —
+   both Done). Critical path next.
+2. `MILESTONE-016` — Construction Template (EPIC-006; M-013 + M-014 Done) —
+   parallel with M-015.
+3. `MILESTONE-003` — Site Ownership & One-Site-Per-User (EPIC-002; M-001 + M-013
    Done) — parallel track 1 (domain).
-3. `MILESTONE-004` — Bilingual Site Content & Published Snapshot Schema
+4. `MILESTONE-004` — Bilingual Site Content & Published Snapshot Schema
    (EPIC-002; M-001 + M-013 Done) — parallel track 1.
-4. `MILESTONE-005` — Project↔Site Linkage & Bilingual Project Schema (EPIC-002;
+5. `MILESTONE-005` — Project↔Site Linkage & Bilingual Project Schema (EPIC-002;
    M-001 + M-013 Done) — parallel track 1.
 
-Per `DEPENDENCY_MAP.md` §4, after M-013 the critical path is
+Per `DEPENDENCY_MAP.md` §4, after M-014 the critical path is
 `M-013 → M-014 → M-015 → M-018 → …`; the domain track (M-003/004/005 → M-006)
 can run in parallel when resourcing allows.
 
@@ -113,6 +122,7 @@ declared change set. They are tracked here rather than silently fixed.
 | 2026-10-11 | **M-001 Done** — thin routes + envelope across projects/tracking/admin/auth-session/health; consumers updated; D-14 refs fixed; `PUT /api/sites` 400 mapping; typecheck/lint(0/30)/build pass; 401 envelopes runtime-verified. Added Review findings RF-1…RF-6. Ready queue → M-002 | Lead Eng. Agent |
 | 2026-10-11 | **M-002 Done** — `shared/lib/env.ts` (Zod, lazy, typed) reads through DB/auth/S3 bootstrap; `.env.example` synced; build verified without `.env`; 5/5 env smoke cases pass. **EPIC-001 complete** (M-001+M-002). Ready queue → M-013 | Lead Eng. Agent |
 | 2026-10-11 | **M-013 Done** — `features/templates` full contract (`TemplateDefinition`, `SiteContent`, `LocalizedText`, `ImageRef`, `SectionType`, `TemplatePage`, `TemplateTheme`), registry (`getTemplate`/`listTemplates`), Zod schemas, bilingual defaults, `cloneTemplateContent`, two definitions; typecheck/lint(0/30)/build pass; 24/24 runtime checks via temporary dev route. Ready queue → M-014 (+ M-003/004/005 parallel) | Lead Eng. Agent |
+| 2026-10-12 | **M-014 Done** — one template-agnostic `TemplateRenderer` (Server Component) rendering `template.pages[].sections` via 12 section components; `ImageWithFallback`; `themeCssVars` token application; `ProjectView`; UI-copy/icon helpers; `/s/[slug]` call site re-wired to renderer+default content; typecheck/lint(0/28)/build pass; 23/23 runtime SSR checks via temporary dev page. Ready queue → M-015 (+ M-003/004/005 parallel) | Lead Eng. Agent |
 
 ## How to update
 

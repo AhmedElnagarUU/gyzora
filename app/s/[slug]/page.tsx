@@ -5,8 +5,8 @@ import {
   getSiteImageSlots,
 } from '@/features/sites/public-service'
 import { TemplateRenderer } from '@/features/templates/components/TemplateRenderer'
-import { getThemeClass } from '@/features/templates/theme'
-import { TEMPLATES } from '@/features/templates'
+import { TEMPLATES, cloneTemplateContent } from '@/features/templates'
+import type { ImageSlotKey, ImageRef } from '@/features/templates'
 
 export const revalidate = 3600 // 1 hour ISR
 
@@ -42,24 +42,31 @@ export default async function PublicSitePage({ params }: PageProps) {
 
   // Fallback to first template if the configured one isn't found
   const templateDef = siteData.templateDef || TEMPLATES[0]
+  const theme = templateDef.theme
 
-  const images = await getSiteImageSlots(
-    siteData.site._id,
-    siteData.tenant._id
-  )
-
-  const themeClasses = siteData.themeDef
-    ? getThemeClass(siteData.themeDef.mode)
-    : ''
+  // Until snapshot publishing (M-023) wires `Site.published.content` in, the
+  // public site renders the template's bilingual default content (sample-only,
+  // `isSampleContent: true`). Slot images resolved from published projects are
+  // merged in so the hero stays real when projects exist.
+  const content = cloneTemplateContent(templateDef)
+  const images = await getSiteImageSlots(siteData.site._id, siteData.tenant._id)
+  for (const [key, img] of Object.entries(images)) {
+    if (img?.url) {
+      content.images[key as ImageSlotKey] = {
+        url: img.url,
+        alt: { en: img.alt || content.company.name, ar: '' },
+        source: 'upload',
+      } satisfies ImageRef
+    }
+  }
 
   return (
-    <div className={themeClasses}>
+    <div className={theme.mode === 'dark' ? 'dark' : ''}>
       <TemplateRenderer
         template={templateDef}
-        images={images}
-        siteName={siteData.site.name}
-        headline={siteData.tenant.name}
-        subheading={`Professional services in ${siteData.tenant.name}`}
+        content={content}
+        locale="en"
+        theme={theme}
       />
     </div>
   )
