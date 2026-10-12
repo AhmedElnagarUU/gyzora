@@ -1,4 +1,10 @@
 import type { NextConfig } from 'next'
+import createNextIntlPlugin from 'next-intl/plugin'
+
+// M-018: next-intl request config (`i18n/config.ts`) — serves
+// `getTranslations`/`getLocale` on the server with cookie-resolved locale.
+// No i18n middleware/routing is added (DEC-005 — no `[locale]` segment).
+const withNextIntl = createNextIntlPlugin('./i18n/config.ts')
 
 const nextConfig: NextConfig = {
   images: {
@@ -54,4 +60,4 @@ const nextConfig: NextConfig = {
   },
 }
 
-export default nextConfig
+export default withNextIntl(nextConfig)

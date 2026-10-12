@@ -9,7 +9,8 @@ import type { z } from 'zod'
  * editable text is `LocalizedText` (bilingual `en`/`ar`, DEC-005).
  */
 
-export type Locale = 'en' | 'ar'
+import type { Locale } from '@/i18n/config'
+export type { Locale }
 
 /**
  * A project as the renderer sees it. Projects live in their own collection

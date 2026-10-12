@@ -1,25 +1,18 @@
-import type { Locale, LocalizedText } from '../types'
+import type { Locale } from '../types'
+import { resolveLocalized } from '@/shared/i18n'
+export { resolveLocalized }
 
 /**
  * Localized-text + UI-copy helpers shared by the section components.
  *
- * `resolveLocalized` is a temporary local shim for the shared
- * `shared/i18n` helper (M-018 replaces it — LOCALIZATION.md §M-018):
- * `ar` → `en` → empty string.
+ * `resolveLocalized` is the single shared implementation in `shared/i18n`
+ * (fixed in M-018 — LOCALIZATION.md §4): `ar` → `en` → empty string.
+ * Re-exported here so sections keep importing from `../lib/text`.
  *
  * `uiCopy` returns structural UI labels (buttons, headings, footer) in the
  * active locale. These are static interface labels — never customer content —
  * so they are not placeholder text (M-014 AC-03, TEMPLATE_SYSTEM §8).
  */
-
-export function resolveLocalized(
-  value: LocalizedText | undefined,
-  locale: Locale
-): string {
-  if (!value) return ''
-  if (locale === 'ar' && value.ar) return value.ar
-  return value.en
-}
 
 const UI_COPY = {
   en: {

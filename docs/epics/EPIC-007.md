@@ -38,7 +38,7 @@ English. FR-10/PA-07 require bilingual support throughout.
 
 | ID | Title | Depends on | Status |
 |---|---|---|---|
-| MILESTONE-018 | next-intl Wiring, Locale Direction & Fallback | M-014, M-015, M-016 | Not Started |
+| MILESTONE-018 | next-intl Wiring, Locale Direction & Fallback | M-014, M-015, M-016 | **Done** (2026-10-12) |
 | MILESTONE-019 | Dashboard Localization & RTL | M-018 | Not Started |
 | MILESTONE-020 | Public Site Localization & Language Switching | M-018, M-023 | Not Started |
 
@@ -49,8 +49,10 @@ English. FR-10/PA-07 require bilingual support throughout.
 
 ## 8. Definition of Done (epic)
 
-- [ ] A single next-intl provider resolves locale from cookie (dashboard) and
+- [x] A single next-intl provider resolves locale from cookie (dashboard) and
       `Site.defaultLocale`/`?lang` (public).
+      *(M-018 dashboard half: cookie-resolved provider + request config, no
+      `[locale]` segment. Public half lands with M-020.)*
 - [ ] `dir`/`lang` correct for `en`/`ar` on both surfaces.
 - [ ] Customer content renders per locale with `ar→en→omit` fallback; switching
       language preserves content and route.

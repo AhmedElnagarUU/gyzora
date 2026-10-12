@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import SignOutButton from '@/features/auth/components/SignOutButton'
 import { useSessionClient } from '@/shared/lib/auth/session-client'
+import LanguageSwitcher from '@/shared/i18n/LanguageSwitcher'
 
 interface NavItem {
   href: string
@@ -96,7 +97,8 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           ))}
         </nav>
         <div className="border-t border-gray-200 p-4">
-          <div className="px-3">
+          <div className="space-y-1 px-3">
+            <LanguageSwitcher />
             <SignOutButton />
           </div>
         </div>

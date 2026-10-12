@@ -119,17 +119,19 @@ Phase H (verify + ship)  M-025, M-026, M-027 → M-028
 ```
 
 `MILESTONE-001`, `MILESTONE-002`, `MILESTONE-013`, `MILESTONE-014`,
-`MILESTONE-015`, `MILESTONE-016`, and `MILESTONE-017` are **Done**
-(M-013/014 2026-10-11/12 — shared template content contract, single renderer
-and full section library; M-015/M-016 2026-10-12 — the two template
+`MILESTONE-015`, `MILESTONE-016`, `MILESTONE-017`, and `MILESTONE-018` are
+**Done** (M-013/014 2026-10-11/12 — shared template content contract, single
+renderer and full section library; M-015/M-016 2026-10-12 — the two template
 identities, real estate premium light teal/gold/serif and construction
 industrial dark orange/yellow, both verified across all six pages; M-017
 2026-10-12 — 13 bundled license-free photos, optional server-only Pexels
 provider and `/api/images/search` endpoint, bundled refs wired into both
-templates' defaults).
-`MILESTONE-018` is the next actionable milestone (critical path — shared
-i18n/next-intl wiring); M-003, M-004, M-005, M-008 are also unblocked. Live
-status: `EXECUTION_STATUS.md`.
+templates' defaults; M-018 2026-10-12 — next-intl substrate: cookie-resolved
+provider + `<html lang dir>` + request config with no `[locale]` segment,
+`shared/i18n` `resolveLocalized`, `LanguageSwitcher`).
+`MILESTONE-019` is the next actionable milestone (critical path — Phase F
+localize: dashboard copy + RTL); M-003, M-004, M-005, M-008 are also
+unblocked. Live status: `EXECUTION_STATUS.md`.
 
 ## MVP acceptance mapping
 

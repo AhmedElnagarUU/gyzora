@@ -16,10 +16,11 @@ same change as the work it describes, with real evidence — never intent
 ## Current state
 
 - **Phase:** Phase A (stabilize) — **complete** (M-001, M-002 → EPIC-001 done).
-  Phase T (templates) — **in progress** (M-013 → M-017 all Done; M-018 next).
-- **First actionable milestone:** **`MILESTONE-018`** (EPIC-006; depends on
-  M-013/M-014 — Done; M-015/M-016/M-017 all Done). M-003, M-004, M-005, M-008
-  are also unblocked (parallelization per `DEPENDENCY_MAP.md` §4).
+  Phase E (templates) — **complete** (M-013, M-014 → M-017 all Done); Phase F
+  (localize) — **in progress** (M-018 Done; M-019 next).
+- **First actionable milestone:** **`MILESTONE-019`** (EPIC-007; depends on
+  M-018 — Done). M-003, M-004, M-005, M-008 are also unblocked
+  (parallelization per `DEPENDENCY_MAP.md` §4).
 - **Baseline commands (pre-recovery, verified):** `typecheck` pass, `lint` pass
   (0 errors/44 warnings), `build` pass. No test framework.
 - **Post-M-001/M-002 (verified 2026-10-11):** `typecheck` pass; `lint` 0 errors/30
@@ -64,6 +65,18 @@ same change as the work it describes, with real evidence — never intent
   authenticated + real-key path deferred — M-025/M-026). Bundled refs added
   to both templates' default content (completes M-015/M-016 imagery
   deferral). See `MILESTONE-017`.
+- **Post-M-018 (verified 2026-10-12):** `typecheck` pass; `lint` 0/28; `build`
+  pass — **32 routes, unchanged set** (no `[locale]` segment); next-intl
+  substrate live across the app: root layout resolves the `locale` cookie →
+  `<html lang dir>` (`ar` ⇒ `rtl`, no cookie ⇒ `en/ltr`) + `NextIntlClientProvider`
+  with `loadMessages` (ar-over-en merge fallback); `createNextIntlPlugin`
+  request config (no i18n middleware/routing); server `getTranslations`
+  request-scoped follows the cookie and explicit `{ locale }` is honored
+  (`requestLocale` → cookie → `en`); `shared/i18n` `resolveLocalized` single
+  source (templates shim removed, `Locale` deduped to `i18n/config`);
+  `LanguageSwitcher` (cookie + reload) mounted in the dashboard sidebar;
+  **catalog 8/8** parity checks + **runtime 21/21** checks (curl.exe). See
+  `MILESTONE-018`.
 - **Blocked:** authenticated-endpoint runtime verification requires a usable
   MongoDB session (`U-01`); resolves with `MILESTONE-025`. Unauth endpoint
   behavior was exercised (401 envelopes; see BASELINE.md).
@@ -89,7 +102,7 @@ same change as the work it describes, with real evidence — never intent
 | M-015 | Real Estate Template | 006 | M-013, M-014 | **Done** | Lead Eng. Agent | Premium light identity (teal/gold/stone + Cormorant serif) distinct from construction; `process` added to Home (8 sections); typecheck pass; lint 0/28; build pass; 40/40 runtime SSR checks; all six pages render (`docs/milestones/EPIC-006/MILESTONE-015.md`) |
 | M-016 | Construction Template | 006 | M-013, M-014 | **Done** | Lead Eng. Agent | Industrial identity (dark `#0f1117`, orange `#ea580c`, yellow `#facc15`, Impact headings); process leads capabilities on Home; typecheck pass; lint 0/28; build pass; 48/48 runtime SSR checks; all six pages render (`docs/milestones/EPIC-006/MILESTONE-016.md`) |
 | M-017 | Template Imagery & Optional Pexels | 006 | M-013, M-014, M-015, M-016 | **Done** | Lead Eng. Agent | 13 bundled license-free photos + README; server-only Pexels provider (no key ⇒ `[]`, never throws); `/api/images/search` thin route + handler (envelope, tenant-gated); `images.pexels.com` allowed; bundled refs wired into both templates' defaults; typecheck pass; lint 0/28; build pass (32 routes); 8/8 provider + 38/38 render/endpoint checks (`docs/milestones/EPIC-006/MILESTONE-017.md`) |
-| M-018 | next-intl Wiring, Locale Direction & Fallback | 007 | M-014, M-015, M-016 | Not Started | — | — |
+| M-018 | next-intl Wiring, Locale Direction & Fallback | 007 | M-014, M-015, M-016 | **Done** | Lead Eng. Agent | next-intl substrate: cookie-resolved provider + `<html lang dir>` + request config (`createNextIntlPlugin`, no `[locale]` segment); `shared/i18n` `resolveLocalized` single source (shim removed from templates; `Locale` deduped to `i18n/config`); ar-over-en catalog merge fallback; `LanguageSwitcher` (cookie) mounted in dashboard sidebar; typecheck pass; lint 0/28; build pass (32 routes, all dynamic); catalog 8/8 + runtime 21/21 checks (`docs/milestones/EPIC-007/MILESTONE-018.md`) |
 | M-019 | Dashboard Localization & RTL | 007 | M-018 | Not Started | — | — |
 | M-020 | Public Site Localization & Language Switching | 007 | M-018, M-023 | Not Started | — | — |
 | M-021 | Draft/Publish Workflow & Snapshot Service | 008 | M-004, M-008, M-023 | Not Started | — | — |
@@ -103,10 +116,9 @@ same change as the work it describes, with real evidence — never intent
 
 ## Ready queue (all prerequisites Done)
 
-1. `MILESTONE-018` — next-intl Wiring, Locale Direction & Fallback (EPIC-007;
-   depends on M-014, M-015, M-016 — all Done). Critical path next — replaces
-   the `resolveLocalized` temp shim in `features/templates/lib/text.ts` with
-   the shared i18n layer.
+1. `MILESTONE-019` — Dashboard Localization & RTL (EPIC-007; depends on M-018 —
+   Done). Critical path next: dashboard copy via `useTranslations` /
+   `getTranslations`, RTL verified in the shell.
 2. `MILESTONE-003` — Site Ownership & One-Site-Per-User (EPIC-002; M-001 + M-013
    Done) — parallel track 1 (domain).
 3. `MILESTONE-004` — Bilingual Site Content & Published Snapshot Schema
@@ -114,8 +126,8 @@ same change as the work it describes, with real evidence — never intent
 4. `MILESTONE-005` — Project↔Site Linkage & Bilingual Project Schema (EPIC-002;
    M-001 + M-013 Done) — parallel track 1.
 
-Per `DEPENDENCY_MAP.md` §4, after M-017 the critical path is
-`M-013 → M-014 → M-015 → M-016 → M-017 → M-018 → …`; the domain track
+Per `DEPENDENCY_MAP.md` §4, after M-018 the critical path is
+`M-013 → M-014 → M-015 → M-016 → M-017 → M-018 → M-019 → …`; the domain track
 (M-003/004/005 → M-006) can run in parallel when resourcing allows.
 
 ## Review findings (from M-001 independent review — not yet scheduled)
@@ -153,6 +165,7 @@ declared change set. They are tracked here rather than silently fixed.
 | 2026-10-12 | **M-015 Done** — real-estate template identity: premium light palette (teal `#0f766e`/gold `#d97706`/stone + Cormorant serif headings) clearly distinct from construction; `process` added to Home composition (8 sections); default content verified (M-013 shape, sample-flagged, no fabricated facts); typecheck/lint(0/28)/build pass; 40/40 runtime SSR checks across the six pages (EN+AR). Ready queue → M-016 (+ M-003/004/005 parallel) | Lead Eng. Agent |
 | 2026-10-12 | **M-016 Done** — construction template identity: industrial dark palette (burnt orange `#ea580c`/high-vis yellow `#facc15`/Impact headings) clearly distinct from real estate; process leads the capabilities block on Home; default content verified (M-013 shape, sample-flagged, no fabrications); typecheck/lint(0/28)/build pass; 48/48 runtime SSR checks across the six pages (EN+AR). Ready queue → M-017 (+ M-003/004/005 parallel) | Lead Eng. Agent |
 | 2026-10-12 | **M-017 Done** — 13 bundled license-free photos under `public/templates/{real-estate,construction}/` + README (license/photo IDs); server-only `shared/lib/images/pexels.ts` (no key ⇒ `[]`, never throws — 8/8 provider checks); `GET /api/images/search` thin route + handler (zod, `requireSession`, envelope, key never exposed — 401 runtime check); `images.pexels.com` in `remotePatterns`; bundled refs wired into both templates' default content (completes M-015/M-016 imagery deferral); typecheck/lint(0/28)/build(32 routes) pass; 38/38 render checks. Ready queue → M-018 (+ M-003/004/005 parallel) | Lead Eng. Agent |
+| 2026-10-12 | **M-018 Done** — next-intl substrate: cookie-resolved `NextIntlClientProvider` + `<html lang dir>` (ar ⇒ rtl) + `createNextIntlPlugin` request config (no `[locale]` segment; server `getTranslations` honors `requestLocale` → cookie → en); `shared/i18n` `resolveLocalized` single source (templates shim removed, `Locale` deduped to `i18n/config`); ar-over-en catalog merge; `LanguageSwitcher` mounted in dashboard sidebar; typecheck/lint(0/28)/build(32 routes, all dynamic) pass; catalog 8/8 + runtime 21/21 checks. Ready queue → M-019 (+ M-003/004/005 parallel) | Lead Eng. Agent |
 
 ## How to update
 
